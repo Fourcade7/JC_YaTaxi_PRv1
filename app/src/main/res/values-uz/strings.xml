@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="next">Keyingi</string>
+    <string name="start">Boshlash</string>
+    <string name="simple_and_speed">Oddiylik va Tezlik!</string>
+    <string name="easy_and_fast">Oson va Tez</string>
+    <string name="save_moneytime">Pulni va Vaqtni tejash!</string>
+    <string name="onboard1">Avtovokzalga borishning nima keragi bor Uydan chiqmasdan mashina topa olasizmi?</string>
+    <string name="onboard2">"Poyezd yoki samolyot chiptasi qidirilmoqda Toshkent? Biz ketmasdan yo'l topdik Uyda, sayohat va qulaylikni toping "</string>
+    <string name="onboard3">Vaqtingiz va pulingizni tejang. Eng yaxshi takliflarni tanlang</string>
+    <string name="choose">Tanlang</string>
+    <string name="iampassanger">Men Yo\'lovchiman</string>
+    <string name="iamdriver">Men Haydovchiman</string>
+    <string name="yataxi">YaTaxi</string>
+    <string name="login">Kirish</string>
+    <string name="enterphonenumber">Telefon raqamingizni yozing</string>
+    <string name="phone">Telefon</string>
+    <string name="register">Ro\'yhatdan o\'tish</string>
+    <string name="otpverification">OTP tekshiruv</string>
+    <string name="confirmyournumber">Raqamingizni tasdiqlang</string>
+    <string name="otpcodesent">Tasdiqlash kodi +998** *** **** ga yuborildi. Iltimos, kodni kiriting.</string>
+    <string name="sms6number">"  sms dagi 6 ta raqamni kiriting"</string>
+    <string name="name">Ism</string>
+    <string name="surname">Familya</string>
+    <string name="enteryourname">Ismingizni kiriting</string>
+    <string name="enteryoursurname">Familyangizni kiriting</string>
+    <string name="privace">Ro\'yxatdan o\'tish orqali siz bizning foydalanish shartlarimizga rozilik bildirasiz.</string>
+    <string name="save">Saqlash</string>
+    <string name="selectcarmodel">Avtomobil rusmini tanlang</string>
+    <string name="carcolor">Avtomobil rangi</string>
+    <string name="number">Avtomobil raqami</string>
+    <string name="driverpassportnumber">Haydovchi passport raqami</string>
+</resources>

@@ -1,0 +1,85 @@
+
+
+
+
+//            val mlivedata = MutableLiveData<Result<ArrayList<PostModel>>?>()
+//            lifecycleScope.launch {
+//                val response = RetrofitInstance.api.getAllPosts()
+//                val data = response.body()
+//                if (response.isSuccessful) {
+//                    mlivedata.postValue(Result.success(data!!))
+//                } else {
+//                    mlivedata.postValue(Result.failure(Exception(response.errorBody()?.string())))
+//                }
+//
+//            }
+//            mlivedata.observe(this@MainActivity) {
+//                it?.onSuccess {
+//                    showlogd("onsucces: ${it.size}")
+//
+//                }
+//                it?.onFailure {
+//                    showlogd(it.message.toString())
+//                }
+//
+//            }
+
+
+            lifecycleScope.launch {
+//                val mlivedata = MutableLiveData<Result<RegisterResponse>>()
+//                showlogd("before loading")
+//                val response=RetrofitInstance.api.registerUser(Register(phone = "9186073369"))
+//                showlogd("after loading")
+//                val data=response.body()
+//                if (response.isSuccessful){
+//                    mlivedata.postValue(Result.success(response.body()!!))
+//                }else{
+//                    mlivedata.postValue(Result.failure(Exception(response.errorBody()!!.string())))
+//                }
+//                mlivedata.observe(this@MainActivity) {
+//
+//                    it.onSuccess {
+//                        showlogd("onsucces: ${it.message}")
+//                    }
+//                    it.onFailure {
+//                        val gson = GsonBuilder().create()
+//                        val r: RegisterResponse = gson.fromJson(it.message, RegisterResponse::class.java)
+//                            showlogd(r.message.toString())
+//                            if (r.phone!=null){
+//                                showlogd(r.phone.get(0))
+//
+//                            }
+//                    }
+//                    when(it){
+//                        is Resource.Error -> {
+//                            showlogd("onerror: ${it.throwable.message}")
+//                            val gson = GsonBuilder().create()
+//                            val r: RegisterResponse = gson.fromJson(it.throwable.message, RegisterResponse::class.java)
+//                            showlogd(r.message.toString())
+//                            showlogd(r.phone!!.get(0))
+//                        }
+//                        Resource.Loading -> {
+//                            showlogd("loading")
+//                        }
+//                        is Resource.Success -> {
+//                            showlogd("onsucces: ${it.data.message}")
+//                        }
+//                    }
+
+
+
+            }
+
+    fun ComponentActivity.opensettings() {
+
+        val intent = (Intent(Settings.ACTION_LOCALE_SETTINGS))
+
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+
+            } else {
+
+            }
+
+        }.launch(intent)
+    }

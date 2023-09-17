@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="next">Next</string>
+    <string name="start">Start</string>
+    <string name="simple_and_speed">Simplicity and speed!</string>
+    <string name="easy_and_fast">Easy and Fast</string>
+    <string name="save_moneytime">Save money and time!</string>
+    <string name="onboard1">Why go to the bus station? Can you find a car without leaving home?</string>
+    <string name="onboard2">Looking for a train or plane ticket to Tashkent? We found a way without leaving. Find comfort, travel and comfort at home</string>
+    <string name="onboard3">Save your time and money. Choose the best offers</string>
+    <string name="choose">Choose</string>
+    <string name="iampassanger">I am a Passenger</string>
+    <string name="iamdriver">I am a driver</string>
+    <string name="yataxi">YaTaxi</string>
+    <string name="login">Login</string>
+    <string name="enterphonenumber">Enter your phone number</string>
+    <string name="phone">Phone</string>
+    <string name="register">Register</string>
+    <string name="otpverification">OTP Verification</string>
+    <string name="confirmyournumber">Confirm your number</string>
+    <string name="otpcodesent">Verification code sent to +998** *** ****. Please enter the code.</string>
+    <string name="sms6number">enter the 6 numbers in the sms</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="enteryourname">Enter your name</string>
+    <string name="enteryoursurname">Enter your surname</string>
+    <string name="privace">By registering, you agree to our terms of use.</string>
+    <string name="save">Save</string>
+    <string name="selectcarmodel">Select a car model</string>
+    <string name="carcolor">Car color</string>
+    <string name="number">Car number</string>
+    <string name="driverpassportnumber">Driver\'s passport number</string>
+</resources>

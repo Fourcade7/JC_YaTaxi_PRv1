@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="title_activity_splash" translatable="false">SplashActivity</string>
+    <string name="title_activity_on_boarding" translatable="false">OnBoardingActivity</string>
+    <string name="title_activity_change" translatable="false">ChangeActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
+    <string name="next">Next</string>
+    <string name="start">Start</string>
+    <string name="simple_and_speed">Simplicity and speed!</string>
+    <string name="easy_and_fast">Easy and Fast</string>
+    <string name="save_moneytime">Save money and time!</string>
+    <string name="onboard1">Why go to the bus station? Can you find a car without leaving home?</string>
+    <string name="onboard2">Looking for a train or plane ticket to Tashkent? We found a way without leaving. Find comfort, travel and comfort at home</string>
+    <string name="onboard3">Save your time and money. Choose the best offers</string>
+    <string name="choose">Choose</string>
+    <string name="iampassanger">I am a Passenger</string>
+    <string name="iamdriver">I am a Driver</string>
+    <string name="yataxi">YaTaxi</string>
+    <string name="login">Log In</string>
+    <string name="enterphonenumber">Enter your phone number</string>
+    <string name="phone">Phone</string>
+    <string name="title_activity_register" translatable="false">RegisterActivity</string>
+    <string name="register">Register</string>
+    <string name="title_activity_onboarding" translatable="false">OnboardingActivity</string>
+    <string name="title_activity_otpactivity" translatable="false">OTPActivity</string>
+    <string name="otpverification">OTP Verification</string>
+    <string name="confirmyournumber">Confirm your number</string>
+    <string name="otpcodesent">OTP code sent</string>
+    <string name="sms6number">enter sms code</string>
+    <string name="title_activity_register_name" translatable="false">RegisterNameActivity</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="enteryourname">Enter your name</string>
+    <string name="enteryoursurname">Enter your surname</string>
+    <string name="privace">PrivacePolicy</string>
+    <string name="save">Save</string>
+    <string name="title_activity_home" translatable="false">HomeActivity</string>
+    <string name="title_activity_register_driver" translatable="false">RegisterDriverActivity</string>
+    <string name="selectcarmodel">Select a car model</string>
+    <string name="carcolor">Car color</string>
+    <string name="number">Car number</string>
+    <string name="driverpassportnumber">Dirver Passport number</string>
+</resources>

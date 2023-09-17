@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="next">Следующий</string>
+    <string name="start">Начинать</string>
+    <string name="simple_and_speed">Просто и быстро</string>
+    <string name="easy_and_fast">Легко и быстро</string>
+    <string name="save_moneytime">Экономьте деньги и время!</string>
+    <string name="onboard1">Зачем идти на автовокзал, можно ли найти машину, не выходя из дома?</string>
+    <string name="onboard2">Ищете билет на поезд или самолет до Ташкента? Мы нашли способ не уезжая.Найти комфорт,путешествие и дом.</string>
+    <string name="onboard3">Экономьте свое время и деньги. Выбирайте лучшие предложения</string>
+    <string name="choose">Выбирать</string>
+    <string name="iampassanger">Я пассажир</string>
+    <string name="iamdriver">Я водитель</string>
+    <string name="yataxi">ЯТакси</string>
+    <string name="login">Войти</string>
+    <string name="enterphonenumber">Введите свой номер телефона</string>
+    <string name="phone">Телефон</string>
+    <string name="register">Регистрация</string>
+    <string name="otpverification">OTP-верификация</string>
+    <string name="confirmyournumber">Подтверди свой номер</string>
+    <string name="otpcodesent">Код подтверждения отправлен на номер +998** *** ****. Пожалуйста, введите код.</string>
+    <string name="sms6number">введите 6 цифр в смс</string>
+    <string name="name">Имя</string>
+    <string name="surname">Фамилия</string>
+    <string name="enteryourname">Введите ваше имя</string>
+    <string name="enteryoursurname">Введите свою фамилию</string>
+    <string name="privace">Регистрируясь, вы соглашаетесь с нашими условиями использования.</string>
+    <string name="save">Сохранять</string>
+    <string name="selectcarmodel">Выберите модель автомобиля</string>
+    <string name="carcolor">Цвет автомобиля</string>
+    <string name="number">Номер машины</string>
+    <string name="driverpassportnumber">Номер паспорта водителя</string>
+</resources>
