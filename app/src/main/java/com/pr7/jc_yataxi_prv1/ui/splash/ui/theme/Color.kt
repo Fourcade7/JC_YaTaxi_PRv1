@@ -15,3 +15,9 @@ val BorderBarColor=Color(0xFF04314B)
 val CardbackgroundLanguage=Color(0xFFF4F5F7)
 val ButtonbackgroundLanguage=Color(0xFFFFCD33)
 val FocusedBorderColor = Color(0xFFFFCD33)
+
+val BottomColors = Color(0xFF5479F7)
+val LayoutbackgroundColors = Color(0xFFECEDF1)
+val CardStrokeColors = Color(0x2C292929)
+val CardBackgroundTransparent = Color(0x3EDBD3D3)
+

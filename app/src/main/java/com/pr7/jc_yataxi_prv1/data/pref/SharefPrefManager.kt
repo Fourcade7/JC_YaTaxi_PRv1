@@ -19,6 +19,7 @@ const val TOKEN = "token"
 const val REFRESH_TOKEN = "refresh_token"
 const val ONBOARDING = "onboarding"
 const val USERTYPE = "usertype"
+const val USERTYPESELECTED = "usertypeselected"
 const val DRIVER = "driver"
 const val PASSANGER = "passanger"
 const val LOGINED = "logined"
@@ -27,6 +28,7 @@ const val LANGUAGE_UZ = "uz"
 const val LANGUAGE_RU = "ru"
 const val LANGUAGE_EN = "en"
 const val LANGUAGE_COUNT = "count"
+const val LANGUAGE_TYPE = "languagetype"
 
 object SharefPrefManager {
 

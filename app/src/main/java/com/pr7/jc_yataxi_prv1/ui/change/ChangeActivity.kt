@@ -52,6 +52,7 @@ import com.pr7.jc_yataxi_prv1.data.pref.DRIVER
 import com.pr7.jc_yataxi_prv1.data.pref.PASSANGER
 import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
 import com.pr7.jc_yataxi_prv1.data.pref.USERTYPE
+import com.pr7.jc_yataxi_prv1.data.pref.USERTYPESELECTED
 import com.pr7.jc_yataxi_prv1.ui.auth.registername.RegisterDriverNameActivity
 import com.pr7.jc_yataxi_prv1.ui.auth.registername.RegisterPassamgerNameActivity
 import com.pr7.jc_yataxi_prv1.ui.change.ui.theme.JC_YaTaxi_PRv1Theme
@@ -105,7 +106,7 @@ fun changeScreen() {
                     .clickable {
                         //change user type request need
                         SharefPrefManager.saveString(USERTYPE, PASSANGER)
-                        SharefPrefManager.saveBoolean(USERTYPE, true)
+                        SharefPrefManager.saveBoolean(USERTYPESELECTED, true)
 
                         val intent = Intent(context, RegisterPassamgerNameActivity::class.java)
                         context.startActivity(intent)
@@ -154,7 +155,7 @@ fun changeScreen() {
                     .height(60.dp)
                     .clickable {
                         SharefPrefManager.saveString(USERTYPE, DRIVER)
-                        SharefPrefManager.saveBoolean(USERTYPE, true)
+                       SharefPrefManager.saveBoolean(USERTYPESELECTED, true)
                         //change user type request need
                         val intent = Intent(context, RegisterDriverNameActivity::class.java)
                         context.startActivity(intent)

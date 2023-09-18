@@ -40,6 +40,7 @@ import com.pr7.jc_yataxi_prv1.data.pref.LOGINED
 import com.pr7.jc_yataxi_prv1.data.pref.ONBOARDING
 import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
 import com.pr7.jc_yataxi_prv1.data.pref.USERTYPE
+import com.pr7.jc_yataxi_prv1.data.pref.USERTYPESELECTED
 import com.pr7.jc_yataxi_prv1.ui.change.ChangeActivity
 import com.pr7.jc_yataxi_prv1.ui.auth.login.LoginActivity
 import com.pr7.jc_yataxi_prv1.ui.home.HomeActivity
@@ -73,7 +74,7 @@ class SplashActivity : ComponentActivity() {
                     nextActivity(this@SplashActivity, LoginActivity())
                     finish()
                 }
-                else if (!SharefPrefManager.loadBoolean(USERTYPE)){
+                else if (!SharefPrefManager.loadBoolean(USERTYPESELECTED)){
                     nextActivity(this@SplashActivity,ChangeActivity())
                     finish()
                 }else{
