@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,12 +50,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.gson.GsonBuilder
 import com.pr7.jc_yataxi_prv1.R
+import com.pr7.jc_yataxi_prv1.data.model.login.LoginUserResponse
+import com.pr7.jc_yataxi_prv1.data.model.register.RegisterUserResponse
+import com.pr7.jc_yataxi_prv1.data.pref.OTPCODE
+import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
 import com.pr7.jc_yataxi_prv1.ui.auth.otp.OTPActivity
 import com.pr7.jc_yataxi_prv1.ui.auth.register.ui.theme.JC_YaTaxi_PRv1Theme
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.FocusedBorderColor
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.StatusBarColor
+import com.pr7.jc_yataxi_prv1.utils.showlogd
 import com.pr7.jc_yataxi_prv1.utils.statusbarcolorchange
 
 class RegisterActivity : ComponentActivity() {
@@ -73,11 +81,65 @@ class RegisterActivity : ComponentActivity() {
 @Composable
 fun registerScreen() {
     val context= LocalContext.current as Activity
-    //val completed: State<Boolean> = registerViewModel.completed.observeAsState(true)
+   val registerViewModel:RegisterViewModel= viewModel()
+    val mlivedataRegisterUserResponse by registerViewModel.mlivedataRegisterResponse.observeAsState()
+    val iscomplatedreg by registerViewModel.iscompletedregister.observeAsState()
 
 
     var name by remember {
         mutableStateOf("")
+    }
+    var messageresponse by remember {
+        mutableStateOf<String?>("")
+    }
+    var countopenotp by remember {
+        mutableStateOf<Int?>(0)
+    }
+    if (countopenotp==1){
+        if (SharefPrefManager.loadString(OTPCODE)!=null){
+            context.startActivity(Intent(context, OTPActivity::class.java))
+            context.finish()
+        }
+
+    }
+
+
+    mlivedataRegisterUserResponse.let {result ->
+        result?.onSuccess {
+            showlogd(funname = "Register user onSucces", text = it.message.toString())
+            showlogd(funname = "Register user onSucces", text = it.otp.toString())
+            SharefPrefManager.saveString(OTPCODE,it.otp.toString())
+
+            messageresponse="Ожидание смс-провайдера"
+            countopenotp=countopenotp!!+1
+        }
+        result?.onFailure {
+            try {
+                val gson= GsonBuilder().create()
+                val gsonparse: RegisterUserResponse =gson.fromJson(it.message, RegisterUserResponse::class.java)
+                if (gsonparse.message!=null){
+                    showlogd(funname = "Register user onError 1", text = gsonparse.message.toString())
+
+                    //messageresponse=gsonparse.message.toString()
+                    messageresponse="Пользователя с таким номером телефона не существует. Пожалуйста, введите другой номер телефона. или Зарегистрируйтесь"
+                    //isnotregistered=true
+                    countopenotp=0
+
+                }
+
+                if (gsonparse.phone!=null){
+                    showlogd(funname = "Register user onError 2", text = gsonparse.phone[0])
+                    //messageresponse=gsonparse.phone[0]
+                    messageresponse="Введите действительный номер телефона."
+                    //isnotregistered=false
+                    countopenotp=0
+
+                }
+            }catch (e:Exception){
+                messageresponse=it.message.toString()
+            }
+
+        }
     }
 
 
@@ -151,12 +213,23 @@ fun registerScreen() {
         )
 
         Spacer(modifier = Modifier.height(15.dp))
-//        if (!completed.value){
-//            CircularProgressIndicator(
-//                modifier = Modifier.size(50.dp),
-//                strokeWidth =10.dp
-//            )
-//        }
+        Text(
+            text =if (messageresponse!=null)  messageresponse.toString() else "",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start,
+
+            fontFamily = FontFamily(Font(R.font.mont_semibold)),
+            fontSize = 14.sp,
+            color = Color.Red
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+
+        if (iscomplatedreg==true){
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp),
+                strokeWidth =10.dp
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
         Surface(
@@ -165,9 +238,9 @@ fun registerScreen() {
                 .padding(16.dp)
                 .height(54.dp)
                 .clickable {
-                    // registerViewModel.registerCD(RegisterCD(phone = name))
-                    context.startActivity(Intent(context, OTPActivity::class.java))
-                    context.finish()
+                    registerViewModel.registerUser(phone = name)
+                    countopenotp=0
+
                 },
             shape = RoundedCornerShape(15.dp),
             color = ButtonbackgroundLanguage,
@@ -175,7 +248,7 @@ fun registerScreen() {
             Column(verticalArrangement = Arrangement.Center) {
 
                 Text(
-                    text = stringResource(id = R.string.next),
+                    text = stringResource(id = R.string.register),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     fontFamily = FontFamily(Font(R.font.mont_semibold)),

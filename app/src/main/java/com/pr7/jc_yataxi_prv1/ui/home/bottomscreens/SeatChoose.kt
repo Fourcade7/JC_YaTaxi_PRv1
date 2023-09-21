@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -81,7 +82,7 @@ fun seeatChooseScreen() {
             Spacer(modifier = Modifier.width(15.dp))
             Text(
 
-                text = "O`rindiqni tanlang",
+                text = stringResource(id = R.string.chooseaseat),
                 textAlign = TextAlign.Start,
                 fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.mont_semibold)),
@@ -109,7 +110,7 @@ fun seeatChooseScreen() {
                     .height(100.dp)
                     .align(alignment = Alignment.End)
                     .clickable {
-                        seatchose1=!seatchose1
+                        seatchose1 = !seatchose1
                     }
             )
             Spacer(modifier = Modifier.width(15.dp))
@@ -124,7 +125,7 @@ fun seeatChooseScreen() {
                         .height(100.dp)
                         .align(Alignment.CenterStart)
                         .clickable {
-                            seatchose2=!seatchose2
+                            seatchose2 = !seatchose2
                         }
 
                 )
@@ -136,7 +137,7 @@ fun seeatChooseScreen() {
                         .height(100.dp)
                         .align(alignment = Alignment.Center)
                         .clickable {
-                            seatchose3=!seatchose3
+                            seatchose3 = !seatchose3
                         }
                 )
                 Image(
@@ -147,7 +148,7 @@ fun seeatChooseScreen() {
                         .height(100.dp)
                         .align(alignment = Alignment.CenterEnd)
                         .clickable {
-                            seatchose4=!seatchose4
+                            seatchose4 = !seatchose4
                         }
 
                 )

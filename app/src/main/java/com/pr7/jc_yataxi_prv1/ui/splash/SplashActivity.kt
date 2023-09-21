@@ -33,16 +33,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.pr7.jc_yataxi_prv1.R
+import com.pr7.jc_yataxi_prv1.data.pref.DRIVER
 import com.pr7.jc_yataxi_prv1.data.pref.LANGUAGE_EN
 import com.pr7.jc_yataxi_prv1.data.pref.LANGUAGE_RU
 import com.pr7.jc_yataxi_prv1.data.pref.LANGUAGE_UZ
 import com.pr7.jc_yataxi_prv1.data.pref.LOGINED
 import com.pr7.jc_yataxi_prv1.data.pref.ONBOARDING
+import com.pr7.jc_yataxi_prv1.data.pref.PASSANGER
 import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
+import com.pr7.jc_yataxi_prv1.data.pref.USERNAMED
 import com.pr7.jc_yataxi_prv1.data.pref.USERTYPE
 import com.pr7.jc_yataxi_prv1.data.pref.USERTYPESELECTED
 import com.pr7.jc_yataxi_prv1.ui.change.ChangeActivity
 import com.pr7.jc_yataxi_prv1.ui.auth.login.LoginActivity
+import com.pr7.jc_yataxi_prv1.ui.auth.registername.RegisterDriverNameActivity
+import com.pr7.jc_yataxi_prv1.ui.auth.registername.RegisterPassamgerNameActivity
 import com.pr7.jc_yataxi_prv1.ui.home.HomeActivity
 import com.pr7.jc_yataxi_prv1.ui.onboarding.OnBoardingActivity
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.JC_YaTaxi_PRv1Theme
@@ -59,7 +64,7 @@ class SplashActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //SharefPrefManager.setLocale(LANGUAGE_RU)
 
-
+        showlogd(funname = "USERNAMED",SharefPrefManager.loadBoolean(USERNAMED).toString())
         setContent {
             statusbarcolorchange(window =window , color = StatusBarColor)
             splashScreen()
@@ -77,7 +82,21 @@ class SplashActivity : ComponentActivity() {
                 else if (!SharefPrefManager.loadBoolean(USERTYPESELECTED)){
                     nextActivity(this@SplashActivity,ChangeActivity())
                     finish()
-                }else{
+                }else if (!SharefPrefManager.loadBoolean(USERNAMED)){
+
+                    if (SharefPrefManager.loadString(USERTYPE).toString()==DRIVER){
+                        val intent = Intent(this@SplashActivity, RegisterDriverNameActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    if (SharefPrefManager.loadString(USERTYPE).toString()==PASSANGER){
+                        val intent = Intent(this@SplashActivity, RegisterPassamgerNameActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                }
+                else{
                     nextActivity(this@SplashActivity,HomeActivity())
                     finish()
                 }

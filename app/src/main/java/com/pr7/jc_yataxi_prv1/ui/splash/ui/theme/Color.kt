@@ -20,4 +20,7 @@ val BottomColors = Color(0xFF5479F7)
 val LayoutbackgroundColors = Color(0xFFECEDF1)
 val CardStrokeColors = Color(0x2C292929)
 val CardBackgroundTransparent = Color(0x3EDBD3D3)
+val LIghtBLue = Color(0xFF18D2FF)
+val Orange = Color(0xFFFF9800)
+val Bworn = Color(0xFF664515)
 

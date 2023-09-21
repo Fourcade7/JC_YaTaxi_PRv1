@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,11 +44,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pr7.jc_yataxi_prv1.R
+import com.pr7.jc_yataxi_prv1.data.pref.PASSANGER
+import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
+import com.pr7.jc_yataxi_prv1.data.pref.TOKEN
+import com.pr7.jc_yataxi_prv1.data.pref.USERNAMED
 import com.pr7.jc_yataxi_prv1.ui.home.HomeActivity
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.FocusedBorderColor
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.StatusBarColor
+import com.pr7.jc_yataxi_prv1.utils.showlogd
 import com.pr7.jc_yataxi_prv1.utils.statusbarcolorchange
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,8 +78,37 @@ fun registerpassangernameScreen() {
         mutableStateOf(false)
     }
     val scope= rememberCoroutineScope()
-
     val context = LocalContext.current as Activity
+
+    val registerNameViewModel:RegisterNameViewModel= viewModel()
+
+    val userinfochane by registerNameViewModel.mlivedataUserInfoch.observeAsState()
+
+
+    var counter by remember {
+        mutableStateOf(0)
+    }
+    if (counter==1){
+        //need request for set user name
+        context.startActivity(Intent(context, HomeActivity::class.java))
+        context.finish()
+    }
+
+    userinfochane.let {result ->
+
+        result?.onSuccess {
+            SharefPrefManager.saveBoolean(USERNAMED,true)
+            showlogd(funname = "NAMED", text = " COMPLATED")
+            counter=counter+1
+        }
+
+    }
+
+
+
+
+
+
     var name by remember {
         mutableStateOf("")
     }
@@ -203,9 +239,15 @@ fun registerpassangernameScreen() {
                 .padding(16.dp)
                 .height(54.dp)
                 .clickable {
-                    // registerNameViewModel.changeUserIinfoCD(token = token, userInfoChangeCD = UserInfoChangeCD(first_name = name, last_name = name2))
-                    context.startActivity(Intent(context, HomeActivity::class.java))
-                    context.finish()
+                    if (name.length>0 && name2.length>0){
+                        registerNameViewModel.changeuserinfo(
+                            token = SharefPrefManager
+                                .loadString(TOKEN)
+                                .toString(), firstname = name, lastname = name2, PASSANGER
+                        )
+                    }
+
+
                 },
             shape = RoundedCornerShape(15.dp),
             color = ButtonbackgroundLanguage

@@ -30,7 +30,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,19 +51,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.gson.GsonBuilder
 import com.pr7.jc_yataxi_prv1.R
+import com.pr7.jc_yataxi_prv1.data.model.changeusertype.ChangeUserTypeResponse
+import com.pr7.jc_yataxi_prv1.data.model.register.RegisterUserResponse
 import com.pr7.jc_yataxi_prv1.data.pref.DRIVER
+import com.pr7.jc_yataxi_prv1.data.pref.OTPCODE
 import com.pr7.jc_yataxi_prv1.data.pref.PASSANGER
 import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
+import com.pr7.jc_yataxi_prv1.data.pref.TOKEN
+import com.pr7.jc_yataxi_prv1.data.pref.USERNAMED
+
 import com.pr7.jc_yataxi_prv1.data.pref.USERTYPE
 import com.pr7.jc_yataxi_prv1.data.pref.USERTYPESELECTED
+import com.pr7.jc_yataxi_prv1.ui.auth.otp.OTPActivity
 import com.pr7.jc_yataxi_prv1.ui.auth.registername.RegisterDriverNameActivity
 import com.pr7.jc_yataxi_prv1.ui.auth.registername.RegisterPassamgerNameActivity
 import com.pr7.jc_yataxi_prv1.ui.change.ui.theme.JC_YaTaxi_PRv1Theme
+import com.pr7.jc_yataxi_prv1.ui.home.HomeActivity
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.BorderBarColor
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.CardbackgroundLanguage
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.StatusBarColor
+import com.pr7.jc_yataxi_prv1.utils.nextActivity
+import com.pr7.jc_yataxi_prv1.utils.showlogd
 import com.pr7.jc_yataxi_prv1.utils.statusbarcolorchange
 import kotlinx.coroutines.launch
 
@@ -68,6 +86,12 @@ class ChangeActivity : ComponentActivity() {
         setContent {
             statusbarcolorchange(window = window, color = StatusBarColor )
             changeScreen()
+            if (SharefPrefManager.loadBoolean(USERTYPESELECTED)){
+                nextActivity(this@ChangeActivity,HomeActivity())
+                finish()
+            }
+
+
         }
     }
 }
@@ -75,7 +99,47 @@ class ChangeActivity : ComponentActivity() {
 @Composable
 fun changeScreen() {
     val context= LocalContext.current as Activity
-    val scope= rememberCoroutineScope()
+
+    val changeViewModel:ChangeViewModel= viewModel()
+
+    val mlivedataChangeUsertype by changeViewModel.mlivedataChangeUsertype.observeAsState()
+    val iscompletedchangetype by changeViewModel.iscompletedchangetype.observeAsState()
+
+
+    var countopenotp by remember {
+        mutableStateOf<Int?>(0)
+    }
+    if (countopenotp==1){
+        if (SharefPrefManager.loadString(TOKEN)!=null){
+            context.startActivity(Intent(context, RegisterDriverNameActivity::class.java))
+            context.finish()
+        }
+
+    }
+
+    mlivedataChangeUsertype.let {result ->
+        result?.onSuccess {
+                showlogd(funname = "user type SUCCES CHANGED",it.user_type.toString())
+                SharefPrefManager.saveString(USERTYPE, DRIVER)
+                SharefPrefManager.saveBoolean(USERTYPESELECTED, true)
+                countopenotp=countopenotp!!+1
+        }
+        result?.onFailure {
+                try {
+                    val gson= GsonBuilder().create()
+                    val gsonparse: ChangeUserTypeResponse =gson.fromJson(it.message, ChangeUserTypeResponse::class.java)
+                    showlogd(funname = "user type ERROR 1 CHANGED",gsonparse.code.toString())
+                    countopenotp=0
+
+                }catch (e:Exception){
+                    showlogd(funname = "user type ERROR 2 CHANGED",it.message.toString())
+                    countopenotp=0
+                }
+        }
+
+    }
+
+
     Box() {
         Image(
             painter = painterResource(id = R.drawable.frame),
@@ -107,7 +171,6 @@ fun changeScreen() {
                         //change user type request need
                         SharefPrefManager.saveString(USERTYPE, PASSANGER)
                         SharefPrefManager.saveBoolean(USERTYPESELECTED, true)
-
                         val intent = Intent(context, RegisterPassamgerNameActivity::class.java)
                         context.startActivity(intent)
                         context.finish()
@@ -154,12 +217,13 @@ fun changeScreen() {
                     .fillMaxWidth()
                     .height(60.dp)
                     .clickable {
-                        SharefPrefManager.saveString(USERTYPE, DRIVER)
-                       SharefPrefManager.saveBoolean(USERTYPESELECTED, true)
+                               changeViewModel.changeUsertype(SharefPrefManager.loadString(TOKEN).toString(),DRIVER)
+                        // SharefPrefManager.saveString(USERTYPE, DRIVER)
+                        //SharefPrefManager.saveBoolean(USERTYPESELECTED, true)
                         //change user type request need
-                        val intent = Intent(context, RegisterDriverNameActivity::class.java)
-                        context.startActivity(intent)
-                        context.finish()
+                        //val intent = Intent(context, RegisterDriverNameActivity::class.java)
+                        //context.startActivity(intent)
+                        //context.finish()
 
                     },
                 border = BorderStroke(width = 1.dp, color = BorderBarColor),

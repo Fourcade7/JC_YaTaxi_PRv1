@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,19 +46,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.gson.GsonBuilder
 import com.pr7.jc_yataxi_prv1.R
+import com.pr7.jc_yataxi_prv1.data.model.userinfo.UserInfoResponse
+import com.pr7.jc_yataxi_prv1.data.pref.PHONE
+import com.pr7.jc_yataxi_prv1.data.pref.REFRESH_TOKEN
+import com.pr7.jc_yataxi_prv1.data.pref.SharefPrefManager
+import com.pr7.jc_yataxi_prv1.data.pref.TOKEN
+import com.pr7.jc_yataxi_prv1.data.pref.USERNAME
+import com.pr7.jc_yataxi_prv1.ui.home.HomeViewModel
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.CardStrokeColors
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.LayoutbackgroundColors
+import com.pr7.jc_yataxi_prv1.utils.showlogd
+import java.lang.Exception
 
 @ExperimentalMaterial3Api
-@Preview(showBackground = true, showSystemUi = true)
+//@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun driverDiscoverScreen() {
-//    val disfrom : State<String?> = driverHomeVIewModel.districtfrom.observeAsState()
-//    val disto : State<String?> = driverHomeVIewModel.districtto.observeAsState()
+fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeViewModel) {
 
+    val mlivedatauserinfo by homeViewModel.mlivedataUserInfo.observeAsState()
+    val mlivedatarefreshtoken by homeViewModel.mlivedataRefreshtoken.observeAsState()
+    val iscomplatedotp by homeViewModel.iscompleteduserinfo.observeAsState()
 
+    //need here change refresh token
+    homeViewModel.getuserinfo(token = SharefPrefManager.loadString(TOKEN).toString())
 
 
     val context = LocalContext.current
@@ -68,6 +82,70 @@ fun driverDiscoverScreen() {
 
     var selectedTimeText by remember {
         mutableStateOf("00:00")
+    }
+    var username by remember {
+        mutableStateOf("Загрузка...")
+    }
+
+
+    mlivedatauserinfo.let { result ->
+
+        result?.onSuccess {
+            showlogd(funname = "userinfo", it.user_type.toString())
+            showlogd(funname = "userinfo firstname", it.first_name.toString())
+            username = "${it.first_name.toString()} ${it.last_name.toString()}"
+            SharefPrefManager.saveString(USERNAME,"${it.first_name} ${it.last_name}")
+            SharefPrefManager.saveString(PHONE,"${it.phone}")
+
+        }
+        result?.onFailure {
+            showlogd(funname = "userinfo", it.message.toString())
+            try {
+                val gson = GsonBuilder().create()
+                val gsonparse: UserInfoResponse =
+                    gson.fromJson(it.message, UserInfoResponse::class.java)
+                if (gsonparse.code != null) {
+                    showlogd(funname = "Ошибка", text = gsonparse.code.toString())
+                    //messageresponse=gsonparse.message.toString()
+                    username = "Ошибка"
+
+                    if (gsonparse.code == "token_not_valid") {
+                        //REFRESH TOKEN REQUEST
+                        //AND
+                        homeViewModel.refreshtoken(
+                            refreshtoken = SharefPrefManager.loadString(
+                                REFRESH_TOKEN
+                            ).toString()
+                        )
+                    }
+
+
+                }
+
+
+            } catch (e: Exception) {
+                result.onFailure {
+                    username = it.message.toString()
+                }
+
+            }
+
+        }
+
+    }
+
+    mlivedatarefreshtoken.let { result ->
+
+        result?.onSuccess {
+            homeViewModel.getuserinfo(token = SharefPrefManager.loadString(it.access.toString()).toString())
+            SharefPrefManager.saveString(TOKEN,it.access.toString())
+            SharefPrefManager.saveString(REFRESH_TOKEN,it.refresh.toString())
+        }
+        result?.onFailure {
+
+        }
+
+
     }
 
 
@@ -120,6 +198,8 @@ fun driverDiscoverScreen() {
 //                    driverHomeVIewModel.succesdisdr.value=false
 //                    driverHomeVIewModel.districtchoose.value="from"
 //                    navHostController.navigate(DriverBottomScreens.DriverRegions.route)
+                    navController.navigate(Screens.Regions.route)
+                    homeViewModel.districtchoose.value="from"
 
                 }
 
@@ -131,7 +211,7 @@ fun driverDiscoverScreen() {
 
                 ) {
                     Text(
-                        text = stringResource(id = R.string.selectanaddress),
+                        text = homeViewModel.districtfrom.value!!,
                         modifier = Modifier.align(Alignment.CenterStart)
                     )
 
@@ -172,6 +252,8 @@ fun driverDiscoverScreen() {
 //                    driverHomeVIewModel.succesdisdr.value=false
 //                    driverHomeVIewModel.districtchoose.value="to"
 //                    navHostController.navigate(DriverBottomScreens.DriverRegions.route)
+                    navController.navigate(Screens.Regions.route)
+                    homeViewModel.districtchoose.value = "to"
                 }
             ) {
                 Box(
@@ -181,7 +263,7 @@ fun driverDiscoverScreen() {
 
                 ) {
                     Text(
-                        text = stringResource(id = R.string.selectanaddress),
+                        text = homeViewModel.districtto.value!!,
                         modifier = Modifier.align(Alignment.CenterStart)
                     )
 

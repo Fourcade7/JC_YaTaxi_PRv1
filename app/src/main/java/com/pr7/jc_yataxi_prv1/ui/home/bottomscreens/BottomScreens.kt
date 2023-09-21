@@ -33,6 +33,7 @@ import com.pr7.jc_yataxi_prv1.data.pref.USERTYPE
 import com.pr7.jc_yataxi_prv1.discoverScreen
 import com.pr7.jc_yataxi_prv1.orderScreen
 import com.pr7.jc_yataxi_prv1.profileScreen
+import com.pr7.jc_yataxi_prv1.ui.home.HomeViewModel
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.BottomColors
 import com.pr7.jc_yataxi_prv1.utils.CONTEXT
 import com.pr7.jc_yataxi_prv1.utils.showlogd
@@ -155,7 +156,7 @@ fun BottomBar(navHostController: NavHostController) {
 @Composable
 fun bottomNavGraphSetup(
     navHostController: NavHostController,
-
+    homeViewModel: HomeViewModel
     ) {
 
 
@@ -163,18 +164,18 @@ fun bottomNavGraphSetup(
         composable(route = Screens.Discover.route) {
 
         if (SharefPrefManager.loadString(USERTYPE).toString()== PASSANGER){
-            discoverScreen()
+            discoverScreen(navHostController,homeViewModel)
         }else if (SharefPrefManager.loadString(USERTYPE).toString()== DRIVER){
-            driverDiscoverScreen()
+            driverDiscoverScreen(navHostController,homeViewModel)
         }else{
-            discoverScreen()
+            discoverScreen(navHostController,homeViewModel)
 
         }
 
         }
         composable(route = Screens.Orders.route) {
             if (SharefPrefManager.loadString(USERTYPE).toString()== PASSANGER){
-                orderScreen()
+                orderScreen(homeViewModel)
             }else if (SharefPrefManager.loadString(USERTYPE).toString()== DRIVER){
                 driverDirectionsScreen()
             }
@@ -182,7 +183,7 @@ fun bottomNavGraphSetup(
         }
         composable(route = Screens.Profile.route) { profileScreen(navHostController = navHostController) }
         composable(route = Screens.SeatChoose.route) { seeatChooseScreen() }
-        composable(route = Screens.Regions.route) { regionsListScreen() }
+        composable(route = Screens.Regions.route) { regionsListScreen(navHostController=navHostController,homeViewModel) }
         composable(route = Screens.ChangeLanguage.route) { changeLanguageScreen() }
 
 

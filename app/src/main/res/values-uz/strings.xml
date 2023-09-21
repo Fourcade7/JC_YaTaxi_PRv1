@@ -13,7 +13,7 @@
     <string name="iampassanger">Men Yo\'lovchiman</string>
     <string name="iamdriver">Men Haydovchiman</string>
     <string name="yataxi">YaTaxi</string>
-    <string name="login">Kirish</string>
+    <string name="loginUser">Kirish</string>
     <string name="enterphonenumber">Telefon raqamingizni yozing</string>
     <string name="phone">Telefon</string>
     <string name="register">Ro\'yhatdan o\'tish</string>
@@ -60,4 +60,17 @@
     <string name="newdirection">Yangi yo\'nalish</string>
     <string name="adddirection">Yo\'nalish qo\'shish</string>
     <string name="mydirections">Yo\'nalishlarim</string>
+    <string name="listofcars">Mashinalar ro\'yhati</string>
+    <string name="red">Qizil</string>
+    <string name="brown">Jigarrang</string>
+    <string name="blue">Moviy</string>
+    <string name="lightblue">Ochiq ko\'k</string>
+    <string name="orange">Apelsin</string>
+    <string name="white">Oq</string>
+    <string name="black">Qora</string>
+    <string name="yellow">Sariq</string>
+    <string name="silver">Kumush</string>
+    <string name="wherearewegoing">Qayerga ketamiz ?</string>
+    <string name="chooseaseat">O\'rindiqni tanlash</string>
+    <string name="taksiyoq">Hozirda bu yo\'nalishda taksi yo\'q</string>
 </resources>

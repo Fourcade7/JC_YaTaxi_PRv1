@@ -13,7 +13,7 @@
     <string name="iampassanger">Я пассажир</string>
     <string name="iamdriver">Я водитель</string>
     <string name="yataxi">ЯТакси</string>
-    <string name="login">Войти</string>
+    <string name="loginUser">Войти</string>
     <string name="enterphonenumber">Введите свой номер телефона</string>
     <string name="phone">Телефон</string>
     <string name="register">Регистрация</string>
@@ -60,4 +60,17 @@
     <string name="newdirection">Новое направление</string>
     <string name="adddirection">Добавить направление</string>
     <string name="mydirections">Мои маршруты</string>
+    <string name="listofcars">Список автомобилей</string>
+    <string name="red">Красный</string>
+    <string name="brown">Коричневый</string>
+    <string name="blue">Синий</string>
+    <string name="lightblue">Светло-синий</string>
+    <string name="orange">Апельсин</string>
+    <string name="white">Белый</string>
+    <string name="black">Черный</string>
+    <string name="yellow">Желтый</string>
+    <string name="silver">Серебро</string>
+    <string name="wherearewegoing">Куда мы идем ?</string>
+    <string name="chooseaseat">Выберите место</string>
+    <string name="taksiyoq">На данный момент такси в этом направлении нет.</string>
 </resources>

@@ -16,7 +16,7 @@
     <string name="iampassanger">I am a Passenger</string>
     <string name="iamdriver">I am a Driver</string>
     <string name="yataxi">YaTaxi</string>
-    <string name="login">Log In</string>
+    <string name="loginUser">Log In</string>
     <string name="enterphonenumber">Enter your phone number</string>
     <string name="phone">Phone</string>
     <string name="title_activity_register" translatable="false">RegisterActivity</string>
@@ -69,4 +69,17 @@
     <string name="newdirection">A new direction</string>
     <string name="adddirection">Add direction</string>
     <string name="mydirections">My Directions</string>
+    <string name="listofcars">List of cars</string>
+    <string name="red">Red</string>
+    <string name="brown">Brown</string>
+    <string name="blue">Blue</string>
+    <string name="lightblue">LightBlue</string>
+    <string name="orange">Orange</string>
+    <string name="white">White</string>
+    <string name="black">Black</string>
+    <string name="yellow">Yellow</string>
+    <string name="silver">Silver</string>
+    <string name="wherearewegoing">Where are we going?</string>
+    <string name="chooseaseat">Choose a seat</string>
+    <string name="taksiyoq">Currently, there are no taxis in this direction</string>
 </resources>

@@ -20,19 +20,24 @@ const val REFRESH_TOKEN = "refresh_token"
 const val ONBOARDING = "onboarding"
 const val USERTYPE = "usertype"
 const val USERTYPESELECTED = "usertypeselected"
+const val USERNAMED = "usernamed"
 const val DRIVER = "driver"
-const val PASSANGER = "passanger"
+const val PASSANGER = "client"
 const val LOGINED = "logined"
+const val OTPCODE = "otpcode"
 
 const val LANGUAGE_UZ = "uz"
 const val LANGUAGE_RU = "ru"
 const val LANGUAGE_EN = "en"
 const val LANGUAGE_COUNT = "count"
 const val LANGUAGE_TYPE = "languagetype"
+const val USERNAME = "Username"
+const val PHONE = "Phone"
+
 
 object SharefPrefManager {
 
-    fun saveString(key: String, value: String) {
+    fun saveString(key: String, value: String?) {
         val editor = CONTEXT.getSharedPreferences("Pr", ComponentActivity.MODE_PRIVATE)
             .edit() as SharedPreferences.Editor
         editor.putString(key, value)

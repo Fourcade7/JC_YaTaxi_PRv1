@@ -35,11 +35,7 @@
             android:exported="false"
             android:label="@string/title_activity_otpactivity"
             android:theme="@style/Theme.JC_YaTaxi_PRv1" />
-        <activity
-            android:name=".ui.auth.onboarding.OnboardingActivity"
-            android:exported="false"
-            android:label="@string/title_activity_onboarding"
-            android:theme="@style/Theme.JC_YaTaxi_PRv1" />
+
         <activity
             android:name=".ui.auth.register.RegisterActivity"
             android:exported="false"
