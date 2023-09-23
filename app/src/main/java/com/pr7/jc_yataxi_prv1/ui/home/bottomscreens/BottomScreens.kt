@@ -177,7 +177,7 @@ fun bottomNavGraphSetup(
             if (SharefPrefManager.loadString(USERTYPE).toString()== PASSANGER){
                 orderScreen(homeViewModel)
             }else if (SharefPrefManager.loadString(USERTYPE).toString()== DRIVER){
-                driverDirectionsScreen()
+                driverDirectionsScreen(homeViewModel)
             }
 
         }

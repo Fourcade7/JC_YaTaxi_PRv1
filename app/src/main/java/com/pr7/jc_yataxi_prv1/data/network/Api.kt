@@ -8,6 +8,8 @@ import com.pr7.jc_yataxi_prv1.data.model.changeusertype.ChangeUserType
 import com.pr7.jc_yataxi_prv1.data.model.changeusertype.ChangeUserTypeResponse
 import com.pr7.jc_yataxi_prv1.data.model.login.LoginUser
 import com.pr7.jc_yataxi_prv1.data.model.login.LoginUserResponse
+import com.pr7.jc_yataxi_prv1.data.model.newdirection.request.DirectionNew
+import com.pr7.jc_yataxi_prv1.data.model.newdirection.response.DirectionNewResponse
 import com.pr7.jc_yataxi_prv1.data.model.newdriver.DriverCarRegister
 import com.pr7.jc_yataxi_prv1.data.model.newdriver.DriverCarRegisterResponse
 import com.pr7.jc_yataxi_prv1.data.model.otp.OTPUser
@@ -104,6 +106,14 @@ interface Api {
         @Query("from_region") fromregid:Int,
         @Query("to_region") toregid:Int,
     ):Response<ArrayList<DirectionsR>>
+
+    //https://yataxi.testing.uz/en/taxi/direction-list-create/
+    @POST("en/taxi/direction-list-create/")
+    suspend fun directionnew(
+        @Header("Authorization") token :String,
+        @Body directionNew: DirectionNew
+    ):Response<DirectionNewResponse>
+
 
 
 }

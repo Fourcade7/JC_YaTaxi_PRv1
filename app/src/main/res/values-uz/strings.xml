@@ -73,4 +73,6 @@
     <string name="wherearewegoing">Qayerga ketamiz ?</string>
     <string name="chooseaseat">O\'rindiqni tanlash</string>
     <string name="taksiyoq">Hozirda bu yo\'nalishda taksi yo\'q</string>
+    <string name="seatreservation">O\'rindiqni band qilish</string>
+    <string name="timealeave">Ketish vaqti</string>
 </resources>

@@ -73,4 +73,6 @@
     <string name="wherearewegoing">Where are we going?</string>
     <string name="chooseaseat">Choose a seat</string>
     <string name="taksiyoq">Currently, there are no taxis in this direction</string>
+    <string name="seatreservation">Seat reservation</string>
+    <string name="timealeave">Time to leave</string>
 </resources>

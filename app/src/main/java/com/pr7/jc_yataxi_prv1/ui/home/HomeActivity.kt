@@ -34,6 +34,7 @@ class HomeActivity : ComponentActivity() {
 
         homeViewModel.districtfrom.value= getString(R.string.selectanaddress)
         homeViewModel.districtto.value= getString(R.string.selectanaddress)
+        homeViewModel.username.value= getString(R.string.loading)
 
         showlogd(funname = "check pref", SharefPrefManager.loadString(USERTYPE).toString())
 

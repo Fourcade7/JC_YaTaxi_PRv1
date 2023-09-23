@@ -1,0 +1,26 @@
+package com.pr7.jc_yataxi_prv1.data.model.newdirection.response
+
+data class DirectionNewResponse(
+    val active: Boolean?=null,
+    val air_conditioner: Boolean?=null,
+    val car: Car?=null,
+    val car_color: String?=null,
+    val car_number: String?=null,
+    val driver: Driver?=null,
+    val end_date: String?=null,
+    val finished: Boolean?=null,
+    val from_district: FromDistrict?=null,
+    val from_neighborhood: FromNeighborhood?=null,
+    val from_region: FromRegion?=null,
+    val fuel_type: String?=null,
+    val id: Int?=null,
+    val is_agreed: Boolean?=null,
+    val orders: List<Any>?=null,
+    val passengers: Int?=null,
+    val price: Int?=null,
+    val seats: List<Seat>?=null,
+    val start_date: String?=null,
+    val to_district: ToDistrict?=null,
+    val to_neighborhood: ToNeighborhood?=null,
+    val to_region: ToRegion?=null,
+)

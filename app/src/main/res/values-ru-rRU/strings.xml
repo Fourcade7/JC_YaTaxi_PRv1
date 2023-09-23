@@ -73,4 +73,6 @@
     <string name="wherearewegoing">Куда мы идем ?</string>
     <string name="chooseaseat">Выберите место</string>
     <string name="taksiyoq">На данный момент такси в этом направлении нет.</string>
+    <string name="seatreservation">Бронирование места</string>
+    <string name="timealeave">Время уходить</string>
 </resources>

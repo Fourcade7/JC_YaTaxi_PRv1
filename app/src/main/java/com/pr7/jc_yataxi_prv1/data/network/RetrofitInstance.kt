@@ -6,6 +6,7 @@ import com.pr7.jc_yataxi_prv1.utils.CONTEXT
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 object RetrofitInstance {
@@ -17,6 +18,9 @@ object RetrofitInstance {
 
     var okHttpClient: OkHttpClient =OkHttpClient().newBuilder()
         .addInterceptor(ChuckerInterceptor(CONTEXT))
+        .connectTimeout(100, TimeUnit.SECONDS)
+        .readTimeout(100, TimeUnit.SECONDS)
+        .writeTimeout(100, TimeUnit.SECONDS)
         .build()
 
     val retrofit = Retrofit.Builder()

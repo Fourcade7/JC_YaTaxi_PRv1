@@ -17,12 +17,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -41,6 +45,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,9 +62,11 @@ import com.pr7.jc_yataxi_prv1.data.pref.USERNAME
 import com.pr7.jc_yataxi_prv1.ui.home.HomeViewModel
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.CardStrokeColors
+import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.FocusedBorderColor
 import com.pr7.jc_yataxi_prv1.ui.splash.ui.theme.LayoutbackgroundColors
 import com.pr7.jc_yataxi_prv1.utils.showlogd
 import java.lang.Exception
+import java.util.Calendar
 
 @ExperimentalMaterial3Api
 //@Preview(showBackground = true, showSystemUi = true)
@@ -71,22 +78,48 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
     val iscomplatedotp by homeViewModel.iscompleteduserinfo.observeAsState()
 
     //need here change refresh token
-    homeViewModel.getuserinfo(token = SharefPrefManager.loadString(TOKEN).toString())
+   // homeViewModel.getuserinfo(token = SharefPrefManager.loadString(TOKEN).toString())
 
+    val mlivedatadirectionNew by homeViewModel.mlivedatadirectionNew.observeAsState()
+    val iscomplated by homeViewModel.iscompleteddirectionNew.observeAsState()
+
+
+
+    var requestcountuserinfo by remember {
+        mutableIntStateOf(0)
+    }
+    if (requestcountuserinfo==0){
+        homeViewModel.getuserinfo(token = SharefPrefManager.loadString(TOKEN).toString())
+
+    }
 
     val context = LocalContext.current
-    val calendar = java.util.Calendar.getInstance()
+    val calendar = Calendar.getInstance()
     var passangercount by remember {
-        mutableIntStateOf(1)
+        mutableIntStateOf(0)
+    }
+
+
+    var requestcount by remember {
+        mutableIntStateOf(0)
     }
 
     var selectedTimeText by remember {
         mutableStateOf("00:00")
     }
+    var selectedTimeText2 by remember {
+        mutableStateOf("00:00")
+    }
+
+    var clockchange by remember {
+        mutableStateOf(false)
+    }
     var username by remember {
         mutableStateOf("Загрузка...")
     }
-
+    var price by remember {
+        mutableStateOf("")
+    }
 
     mlivedatauserinfo.let { result ->
 
@@ -96,6 +129,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
             username = "${it.first_name.toString()} ${it.last_name.toString()}"
             SharefPrefManager.saveString(USERNAME,"${it.first_name} ${it.last_name}")
             SharefPrefManager.saveString(PHONE,"${it.phone}")
+            requestcountuserinfo=1
 
         }
         result?.onFailure {
@@ -149,14 +183,40 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
     }
 
 
+
+    mlivedatadirectionNew.let {result ->
+
+        result?.onSuccess {
+            if (requestcount==1){
+                navController.navigate(Screens.Orders.route)
+                requestcount=0
+
+            }
+            showlogd(funname = "new direction","ready")
+        }
+        result?.onFailure {
+
+        }
+
+    }
+
+
     // Fetching current hour, and minute
-    var hour = calendar[java.util.Calendar.HOUR_OF_DAY]
-    var minute = calendar[java.util.Calendar.MINUTE]
+
+    var hour = calendar[Calendar.HOUR_OF_DAY]
+    var minute = calendar[Calendar.MINUTE]
+    var second = calendar[Calendar.SECOND]
 
     val timePicker = TimePickerDialog(
         context,
         { _, selectedHour: Int, selectedMinute: Int ->
-            selectedTimeText = "$selectedHour:$selectedMinute"
+            if (clockchange){
+                selectedTimeText = "$selectedHour:$selectedMinute"
+
+            }else{
+                selectedTimeText2 = "$selectedHour:$selectedMinute"
+
+            }
         }, hour, minute, false
     )
 
@@ -301,6 +361,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                     modifier = Modifier.weight(1f),
                     border = BorderStroke(width = 1.dp,color = CardStrokeColors),
                     onClick = {
+                        clockchange=true
                         timePicker.show()
                     }
                 ) {
@@ -343,7 +404,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                             Spacer(modifier = Modifier.height(7.dp))
 
                             Text(
-                                text = "08:00",
+                                text = selectedTimeText,
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     lineHeight = 23.sp,
@@ -362,6 +423,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                     modifier = Modifier
                         .weight(1f)
                         .clickable {
+                            clockchange=false
                             timePicker.show()
 
                         },
@@ -405,7 +467,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                             Spacer(modifier = Modifier.height(7.dp))
 
                             Text(
-                                text = "12:00",
+                                text = selectedTimeText2,
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     lineHeight = 23.sp,
@@ -498,7 +560,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                             modifier = Modifier.align(Alignment.CenterVertically),
                             colors = CardDefaults.cardColors(LayoutbackgroundColors),
                             onClick = {
-                                if (passangercount>1){
+                                if (passangercount>0){
                                     passangercount--
                                 }
 
@@ -548,67 +610,113 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                 //modifier = Modifier.align(Alignment.Center)
             )
             Spacer(modifier = Modifier.height(12.dp))
-            Card(
-                colors = CardDefaults.cardColors(Color.White),
-                modifier = Modifier
-
-                    .clickable {
-                        //navHostController.navigate(DriverBottomScreens.DriverSeatChoose.route)
-
-                    },
-                border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-            ) {
-                Row(
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Card(
+                    colors = CardDefaults.cardColors(Color.White),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
+
+                        .clickable {
+                            //navHostController.navigate(DriverBottomScreens.DriverSeatChoose.route)
+
+                        }
+                        .weight(1f),
+                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
                 ) {
-                    Card(
-                        elevation = CardDefaults.cardElevation(1.dp),
-                        shape = CircleShape,
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        colors = CardDefaults.cardColors(LayoutbackgroundColors)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.seat),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(40.dp)
-                                .padding(5.dp)
-                        )
+                        Card(
+                            elevation = CardDefaults.cardElevation(1.dp),
+                            shape = CircleShape,
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            colors = CardDefaults.cardColors(LayoutbackgroundColors)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.seat),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .padding(5.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(10.dp))
+
+
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.seatposition),
+                                style = TextStyle(
+                                    fontSize = 12.sp,
+                                    lineHeight = 23.sp,
+                                    fontFamily = FontFamily(Font(R.font.mont_light)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFF17334C),
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(7.dp))
+
+                            Text(
+                                text = stringResource(id = R.string.all),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    lineHeight = 23.sp,
+                                    fontFamily = FontFamily(Font(R.font.mont_bold)),
+                                    fontWeight = FontWeight(700),
+                                    color = Color(0xFF17334C),
+                                )
+                            )
+                        }
                     }
 
-                    Spacer(modifier = Modifier.width(10.dp))
 
-
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.seatposition),
-                            style = TextStyle(
-                                fontSize = 12.sp,
-                                lineHeight = 23.sp,
-                                fontFamily = FontFamily(Font(R.font.mont_light)),
-                                fontWeight = FontWeight(600),
-                                color = Color(0xFF17334C),
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(7.dp))
-
-                        Text(
-                            text = stringResource(id = R.string.all),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                lineHeight = 23.sp,
-                                fontFamily = FontFamily(Font(R.font.mont_bold)),
-                                fontWeight = FontWeight(700),
-                                color = Color(0xFF17334C),
-                            )
-                        )
-                    }
                 }
 
+                Spacer(modifier = Modifier.width(5.dp))
+                Card(
+                    colors = CardDefaults.cardColors(Color.White),
+                    modifier = Modifier
 
+                        .clickable {
+                            //navHostController.navigate(DriverBottomScreens.DriverSeatChoose.route)
+
+                        }
+                        .weight(1f),
+                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                ){
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = price,
+                        onValueChange = {
+
+                            if (it.length < 10) {
+                                price = it
+                            }
+
+                        },
+                        placeholder = {
+                            Text(text = "UZS")
+                        },
+
+
+                        maxLines = 1,
+
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+
+                        textStyle = LocalTextStyle.current.copy(
+                            textAlign = TextAlign.Start,
+                            fontSize = 15.sp
+                        ),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent)
+
+                    )
+                }
             }
 
             Surface(
@@ -618,6 +726,43 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                     .height(54.dp)
                     .clickable {
                         //navController.navigate(Screens.Orders.route)
+
+                        if (price.isNotEmpty() &&homeViewModel.regfromid.value!!>0 && homeViewModel.disfromid.value!!>0 && homeViewModel.regtoid.value!!>0 && homeViewModel.distoid.value!!>0){
+                            val calendarr = Calendar.getInstance()
+                            var year = calendarr[Calendar.YEAR]
+                            var month = calendarr[Calendar.MONTH]+ 1
+                            var day = calendarr[Calendar.DAY_OF_MONTH]
+
+                            var secondr = calendarr[Calendar.SECOND]
+                            var starttime = "$year-$month-${day}T$selectedTimeText:${secondr}Z"
+                            var endtime = "$year-$month-${day}T$selectedTimeText2:${secondr}Z"
+                            homeViewModel.selectedtime1.value=starttime
+                            homeViewModel.selectedtime2.value=endtime
+                            homeViewModel.price.value=price.toInt()
+                            showlogd(funname = "time", text = starttime)
+                            showlogd(funname = "reg dis", text = "${homeViewModel.regfromid.value} ${homeViewModel.disfromid.value} to ${homeViewModel.regtoid.value} ${homeViewModel.distoid.value}")
+                            showlogd(funname = "price", text = price)
+                            showlogd(funname = "endtime", text = endtime)
+
+
+                            //go request
+
+                            homeViewModel.directionNew(
+                                token = SharefPrefManager.loadString(TOKEN).toString(),
+                                startdate = homeViewModel.selectedtime1.value!!,
+                                enddate = homeViewModel.selectedtime2.value!!,
+                                price = homeViewModel.price.value!!,
+                                fromdisid = homeViewModel.disfromid.value!!,
+                                todisid = homeViewModel.distoid.value!!,
+                                fromregid = homeViewModel.regfromid.value!!,
+                                toregid = homeViewModel.regtoid.value!!
+                            )
+                            requestcount=1
+
+
+                        }
+
+
                     },
                 shape = RoundedCornerShape(15.dp),
                 color = ButtonbackgroundLanguage

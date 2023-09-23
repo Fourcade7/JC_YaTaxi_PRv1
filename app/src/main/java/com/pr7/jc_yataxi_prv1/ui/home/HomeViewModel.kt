@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pr7.jc_yataxi_prv1.DirectionsR
+import com.pr7.jc_yataxi_prv1.data.model.newdirection.request.DirectionNew
+import com.pr7.jc_yataxi_prv1.data.model.newdirection.response.DirectionNewResponse
 import com.pr7.jc_yataxi_prv1.data.model.refresh_token.RefreshToken
 import com.pr7.jc_yataxi_prv1.data.model.refresh_token.RefreshTokenResponse
 import com.pr7.jc_yataxi_prv1.data.model.regions.DistrictsResponse
@@ -29,6 +31,13 @@ class HomeViewModel constructor():ViewModel() {
     val mlivedataGetDirections= MutableLiveData<Result<ArrayList<DirectionsR>>>()
     val iscomplatedgetdirection= MutableLiveData<Boolean>(false)
 
+    //new direction
+    val mlivedatadirectionNew= MutableLiveData<Result<DirectionNewResponse>>()
+    val iscompleteddirectionNew= MutableLiveData<Boolean>(false)
+
+
+
+
     val changeregdis= MutableLiveData<Boolean>(true)
 
     val districtchoose= MutableLiveData<String?>(null)
@@ -39,6 +48,10 @@ class HomeViewModel constructor():ViewModel() {
     val regtoid=MutableLiveData<Int?>(0)
     val disfromid=MutableLiveData<Int?>(0)
     val distoid=MutableLiveData<Int?>(0)
+    val selectedtime1=MutableLiveData<String?>("")
+    val selectedtime2=MutableLiveData<String?>("")
+    val price=MutableLiveData<Int?>(0)
+    val username=MutableLiveData<String?>("")
 
 
 
@@ -152,6 +165,41 @@ class HomeViewModel constructor():ViewModel() {
 
 
             iscomplatedgetdirection.postValue(false)
+
+        }
+
+
+    }
+
+
+    fun directionNew(token :String,startdate:String,enddate:String,price:Int, fromdisid:Int, todisid :Int, fromregid :Int, toregid :Int)=viewModelScope.launch {
+        iscompleteddirectionNew.postValue(true)
+
+        try {
+            val response=api.directionnew("Bearer $token" , DirectionNew(
+                start_date = startdate,
+                end_date = enddate,
+                price = price,
+                from_region = fromregid,
+                from_district = fromdisid,
+                to_region = toregid,
+                to_district = todisid
+            ))
+            if (response.isSuccessful){
+                mlivedatadirectionNew.postValue(Result.success(response.body()!!))
+
+            }else{
+                mlivedatadirectionNew.postValue(Result.failure(Exception(response.errorBody()!!.string())))
+
+
+            }
+            iscompleteddirectionNew.postValue(false)
+
+
+        }catch (e:Exception){
+
+
+            iscompleteddirectionNew.postValue(false)
 
         }
 
