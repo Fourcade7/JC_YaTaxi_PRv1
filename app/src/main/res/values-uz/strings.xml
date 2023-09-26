@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="app_name">BizTaxi</string>
+    <string name="title_activity_splash">BizTaxi</string>
     <string name="next">Keyingi</string>
     <string name="start">Boshlash</string>
     <string name="simple_and_speed">Oddiylik va Tezlik!</string>
@@ -75,4 +76,6 @@
     <string name="taksiyoq">Hozirda bu yo\'nalishda taksi yo\'q</string>
     <string name="seatreservation">O\'rindiqni band qilish</string>
     <string name="timealeave">Ketish vaqti</string>
+    <string name="wetaxi">BizTaxi</string>
+    <string name="price">Narxi</string>
 </resources>

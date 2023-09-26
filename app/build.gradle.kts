@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.pr7.jc_yataxi_prv1"
+    namespace = "com.pr7.jc_biztaxi_v4"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.pr7.jc_yataxi_prv1"
+        applicationId = "com.pr7.jc_biztaxi_v4"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

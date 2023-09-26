@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="app_name">МыТакси</string>
+    <string name="title_activity_splash">МыТакси</string>
     <string name="next">Следующий</string>
     <string name="start">Начинать</string>
     <string name="simple_and_speed">Просто и быстро</string>
@@ -75,4 +76,6 @@
     <string name="taksiyoq">На данный момент такси в этом направлении нет.</string>
     <string name="seatreservation">Бронирование места</string>
     <string name="timealeave">Время уходить</string>
+    <string name="wetaxi">МыТакси</string>
+    <string name="price">Цена</string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">JC_YaTaxi_PRv1</string>
+    <string name="app_name">WeTaxi</string>
+    <string name="title_activity_splash">WeTaxi</string>
     <string name="next">Next</string>
     <string name="start">Start</string>
     <string name="simple_and_speed">Simplicity and speed!</string>
@@ -75,4 +76,6 @@
     <string name="taksiyoq">Currently, there are no taxis in this direction</string>
     <string name="seatreservation">Seat reservation</string>
     <string name="timealeave">Time to leave</string>
+    <string name="wetaxi">WeTaxi</string>
+    <string name="price">Price</string>
 </resources>
