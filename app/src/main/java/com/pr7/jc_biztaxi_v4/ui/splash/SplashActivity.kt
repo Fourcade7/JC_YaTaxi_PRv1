@@ -24,12 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.messaging.FirebaseMessaging
 import com.pr7.jc_biztaxi_v4.R
 import com.pr7.jc_biztaxi_v4.data.pref.DRIVER
 import com.pr7.jc_biztaxi_v4.data.pref.LOGINED
 import com.pr7.jc_biztaxi_v4.data.pref.ONBOARDING
 import com.pr7.jc_biztaxi_v4.data.pref.PASSANGER
 import com.pr7.jc_biztaxi_v4.data.pref.SharefPrefManager
+import com.pr7.jc_biztaxi_v4.data.pref.TOKEN
 import com.pr7.jc_biztaxi_v4.data.pref.USERNAMED
 import com.pr7.jc_biztaxi_v4.data.pref.USERTYPE
 import com.pr7.jc_biztaxi_v4.data.pref.USERTYPESELECTED
@@ -51,9 +53,18 @@ class SplashActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //SharefPrefManager.setLocale(LANGUAGE_RU)
+      //SharefPrefManager.saveString(TOKEN,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NjQzMDI4LCJpYXQiOjE2OTc1NTY2MjgsImp0aSI6ImNiYzc4ZTBkZjE5MDRkZTFiNWMyMjEzYzdhNDVhNDdmIiwidXNlcl9pZCI6IjNkNTg1MWUyLWUyYTEtNDQ4ZS04OGZjLWRiOTkzODY4YzM0ZSJ9.86XBolgFvo_muRXl7LmmHpGb0_aKwMyeqDZ9-rX80II")
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            showlogd(funname = "FirebaseMessaging", text = it)
+        }.addOnFailureListener {
+            showlogd(funname = "FirebaseMessaging ERROR", text = it.toString())
+        }
+        val token=SharefPrefManager.loadString(TOKEN).toString()
+        showlogd("TOKEN ACCES",token)
+        //SharefPrefManager.saveString(TOKEN, "${token}777")
 
-        showlogd(funname = "USERNAMED",SharefPrefManager.loadBoolean(USERNAMED).toString())
+
+        //showlogd(funname = "USERNAMED",SharefPrefManager.loadBoolean(USERNAMED).toString())
         setContent {
             statusbarcolorchange(window =window , color = StatusBarColor)
             splashScreen()

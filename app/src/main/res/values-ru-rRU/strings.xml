@@ -78,4 +78,16 @@
     <string name="timealeave">Время уходить</string>
     <string name="wetaxi">МыТакси</string>
     <string name="price">Цена</string>
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="gender">Пол</string>
+    <string name="status">Статус</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="pending">В ожидании</string>
+    <string name="seat">место</string>
+    <string name="waiting">Ожидающий...</string>
+    <string name="confirmed">Подтвержденный</string>
+    <string name="cancelled">Отменено</string>
+    <string name="ready">Готовый</string>
 </resources>

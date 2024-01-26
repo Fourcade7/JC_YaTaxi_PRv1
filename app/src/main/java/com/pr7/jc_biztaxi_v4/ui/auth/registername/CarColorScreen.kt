@@ -43,7 +43,7 @@ import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.LayoutbackgroundColors
 fun carColorScreen(registerNameViewModel: RegisterNameViewModel,navHostController:NavHostController) {
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.height(35.dp))
+        //Spacer(modifier = Modifier.height(35.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,7 +53,7 @@ fun carColorScreen(registerNameViewModel: RegisterNameViewModel,navHostControlle
                 modifier = Modifier.size(38.dp),
                 shape = RoundedCornerShape(8.dp),
                 onClick = {
-                    //navHostController.popBackStack()
+                    navHostController.popBackStack()
                 }
             ) {
                 Box(

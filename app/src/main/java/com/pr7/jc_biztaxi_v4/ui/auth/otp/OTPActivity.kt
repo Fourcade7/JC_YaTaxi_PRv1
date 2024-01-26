@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,10 +46,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.GsonBuilder
 import com.pr7.jc_biztaxi_v4.R
 import com.pr7.jc_biztaxi_v4.data.model.otp.OTPUserResponse
@@ -72,11 +71,15 @@ import com.pr7.jc_biztaxi_v4.utils.statusbarcolorchange
 import java.lang.Exception
 
 class OTPActivity : ComponentActivity() {
+
+    val otpViewModel:OTPViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             statusbarcolorchange(window = window, color = StatusBarColor)
-            otpverifyScreen()
+            otpverifyScreen(otpViewModel)
+
+
         }
     }
 }
@@ -84,12 +87,12 @@ class OTPActivity : ComponentActivity() {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true, showSystemUi = true)
+//@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun otpverifyScreen() {
+fun otpverifyScreen(otpviewModel:OTPViewModel) {
     val context = LocalContext.current as Activity
 
-    val otpviewModel: OTPViewModel = viewModel()
+
     val mlivedataOtpUserResponse by otpviewModel.mlivedataOtpResponse.observeAsState()
     val mlivedatauserinfo by otpviewModel.mlivedataUserInfo.observeAsState()
     val iscomplatedotp by otpviewModel.iscompletedotp.observeAsState()
@@ -191,7 +194,7 @@ fun otpverifyScreen() {
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Spacer(modifier = Modifier.height(35.dp))
+
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {

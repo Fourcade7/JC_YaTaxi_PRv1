@@ -27,6 +27,21 @@ const val LANGUAGE_TYPE = "languagetype"
 const val USERNAME = "Username"
 const val PHONE = "Phone"
 
+const val NOTIFICATION_MESSAGE = "notifymessage"
+const val NOTIFICATION_SEAT_ID = "seat_id"
+const val NOTIFICATION_ORDER = "notify_order"
+const val GENDER = "gender"
+const val MAN = "Man"
+const val WOMAN = "Woman"
+
+
+const val THEME_CHANGE ="theme"
+
+const val REGFROM_ID ="regfromid"
+const val REGTO_ID ="regtoid"
+const val DISFROM_ID ="disfromid"
+const val DISTO_ID ="distoid"
+
 
 object SharefPrefManager {
 

@@ -191,7 +191,7 @@ fun registerScreen() {
                 Text(text = stringResource(id = R.string.phone))
             },
             placeholder = {
-                Text(text = "+998")
+                Text(text = "")
             },
             maxLines = 1,
             singleLine = true,

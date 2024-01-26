@@ -35,13 +35,14 @@ class RegisterNameViewModel constructor():ViewModel() {
 
 
 
-    fun changeuserinfo(token:String,firstname:String,lastname:String,usertype:String)=viewModelScope.launch {
+    fun changeuserinfo(token:String,firstname:String,lastname:String,usertype:String,gender:String)=viewModelScope.launch {
         iscompleteduserinfoch.postValue(true)
         try {
             val response=api.changeUserinfo(token = "Bearer $token", changeUserInfo = ChangeUserInfo(
                 first_name = firstname,
                 last_name = lastname,
                 passport = "negap",
+                gender = gender,
                 user_type = usertype
             ))
             if (response.isSuccessful){

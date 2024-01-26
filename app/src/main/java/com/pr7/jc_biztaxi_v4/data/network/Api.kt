@@ -7,12 +7,18 @@ import com.pr7.jc_biztaxi_v4.data.model.changeusertype.ChangeUserType
 import com.pr7.jc_biztaxi_v4.data.model.changeusertype.ChangeUserTypeResponse
 import com.pr7.jc_biztaxi_v4.data.model.directions2.DirectionsR2
 import com.pr7.jc_biztaxi_v4.data.model.directions_active.DirectionsActiveResponse
+import com.pr7.jc_biztaxi_v4.data.model.firebase_fcm.FirebaseFCM
+import com.pr7.jc_biztaxi_v4.data.model.firebase_fcm.FirebaseFCMResponse
 import com.pr7.jc_biztaxi_v4.data.model.login.LoginUser
 import com.pr7.jc_biztaxi_v4.data.model.login.LoginUserResponse
 import com.pr7.jc_biztaxi_v4.data.model.newdirection.request.DirectionNew
 import com.pr7.jc_biztaxi_v4.data.model.newdirection.response.DirectionNewResponse
 import com.pr7.jc_biztaxi_v4.data.model.newdriver.DriverCarRegister
 import com.pr7.jc_biztaxi_v4.data.model.newdriver.DriverCarRegisterResponse
+import com.pr7.jc_biztaxi_v4.data.model.newseat.NewSeat
+import com.pr7.jc_biztaxi_v4.data.model.newseat.NewSeatResponse
+import com.pr7.jc_biztaxi_v4.data.model.orderseat.OrderSeat
+import com.pr7.jc_biztaxi_v4.data.model.orderseat.OrderSeatResponse
 import com.pr7.jc_biztaxi_v4.data.model.otp.OTPUser
 import com.pr7.jc_biztaxi_v4.data.model.otp.OTPUserResponse
 import com.pr7.jc_biztaxi_v4.data.model.refresh_token.RefreshToken
@@ -120,6 +126,29 @@ interface Api {
     suspend fun getactiveDirections(
         @Header("Authorization") token :String,
     ):Response<ArrayList<DirectionsActiveResponse>>
+
+//{{baseUrl}}/uz/users/api/user-fcm_token/
+    @POST("uz/users/api/user-fcm_token/")
+    suspend fun firebaseFCM(
+        @Header("Authorization") token :String,
+        @Body firebaseFCM: FirebaseFCM
+    ):Response<FirebaseFCMResponse>
+
+    //{{baseUrl}}/uz/taxi/order-seat-create/
+    @POST("uz/taxi/order-seat-create/")
+    suspend fun newSeat(
+        @Header("Authorization") token :String,
+        @Body newSeat: NewSeat
+    ):Response<NewSeatResponse>
+
+
+    //https://yataxi.testing.uz/en/taxi/order-seat-detail/{id}/
+    @PATCH("en/taxi/order-seat-detail/{id}/")
+    suspend fun confirmseatorder(
+        @Header("Authorization") token :String,
+        @Path("id") id:Int,
+        @Body orderSeat: OrderSeat
+    ):Response<OrderSeatResponse>
 
 
 

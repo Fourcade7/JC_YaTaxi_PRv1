@@ -11,6 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val StatusBarColor=Color(0xFF17334C)
+val StatusBarColor2=Color(0xFF1B3953)
 val BorderBarColor=Color(0xFF04314B)
 val CardbackgroundLanguage=Color(0xFFF4F5F7)
 val ButtonbackgroundLanguage=Color(0xFFFFCD33)
@@ -23,4 +24,7 @@ val CardBackgroundTransparent = Color(0x3EDBD3D3)
 val LIghtBLue = Color(0xFF18D2FF)
 val Orange = Color(0xFFFF9800)
 val Bworn = Color(0xFF664515)
+val CALLbackground = Color(0xFF3D8D40)
+
+
 

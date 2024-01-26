@@ -86,4 +86,16 @@
     <string name="timealeave">Time to leave</string>
     <string name="wetaxi">WeTaxi</string>
     <string name="price">Price</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="gender">Gender</string>
+    <string name="status">Status</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="pending">Pending</string>
+    <string name="seat">seat</string>
+    <string name="waiting">Waiting</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="ready">Ready</string>
 </resources>

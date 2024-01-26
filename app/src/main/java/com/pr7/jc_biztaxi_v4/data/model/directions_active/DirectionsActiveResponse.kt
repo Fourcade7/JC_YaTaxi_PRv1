@@ -15,7 +15,7 @@ data class DirectionsActiveResponse(
     val fuel_type: String,
     val id: Int,
     val is_agreed: Boolean,
-    val orders: List<Any>,
+    val orders: List<Seats>?= emptyList(),
     val passengers: Int,
     val price: Int,
     val seats: List<Seat>,

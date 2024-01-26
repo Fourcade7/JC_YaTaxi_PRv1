@@ -1,5 +1,7 @@
 package com.pr7.jc_biztaxi_v4.data.model.directions2
 
+import com.pr7.jc_biztaxi_v4.data.model.directions_active.Seats
+
 data class ResultData(
     val active: Boolean,
     val air_conditioner: Boolean,
@@ -15,12 +17,13 @@ data class ResultData(
     val fuel_type: String,
     val id: Int,
     val is_agreed: Boolean,
-    val orders: List<Any>,
+    val orders: List<Seats>,
     val passengers: Int,
     val price: Int,
     val seats: List<Seat>,
     val start_date: String,
     val to_district: ToDistrict,
     val to_neighborhood: ToNeighborhood,
-    val to_region: ToRegion
+    val to_region: ToRegion,
+    val client_status:String?=null
 )

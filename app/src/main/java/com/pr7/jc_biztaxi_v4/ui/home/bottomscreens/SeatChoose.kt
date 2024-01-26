@@ -55,7 +55,7 @@ fun seeatChooseScreen() {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(35.dp))
+        //Spacer(modifier = Modifier.height(35.dp))
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {

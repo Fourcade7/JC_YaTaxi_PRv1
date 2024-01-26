@@ -78,4 +78,16 @@
     <string name="timealeave">Ketish vaqti</string>
     <string name="wetaxi">BizTaxi</string>
     <string name="price">Narxi</string>
+    <string name="male">Erkak</string>
+    <string name="female">Ayol</string>
+    <string name="gender">Jinsi</string>
+    <string name="status">Status</string>
+    <string name="yes">Ha</string>
+    <string name="no">Yo\'q</string>
+    <string name="pending">Kutilmoqda</string>
+    <string name="seat">o\'rindiq</string>
+    <string name="waiting">Kuting...</string>
+    <string name="confirmed">Qabul qilingan</string>
+    <string name="cancelled">Bekor qilingan</string>
+    <string name="ready">Tayyor</string>
 </resources>

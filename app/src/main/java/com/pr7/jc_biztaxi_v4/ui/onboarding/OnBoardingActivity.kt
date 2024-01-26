@@ -86,7 +86,7 @@ fun onBoardMain() {
     Column() {
         Card(
             modifier = Modifier
-                .padding(top = 50.dp, end = 16.dp, start = 16.dp)
+                .padding(top = 16.dp, end = 16.dp, start = 16.dp)
                 .clickable {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         counter++

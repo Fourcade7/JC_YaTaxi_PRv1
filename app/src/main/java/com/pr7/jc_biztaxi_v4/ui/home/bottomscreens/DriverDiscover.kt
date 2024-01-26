@@ -15,14 +15,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -51,13 +57,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.gson.GsonBuilder
 import com.pr7.jc_biztaxi_v4.R
+import com.pr7.jc_biztaxi_v4.data.model.orderseat.OrderSeat
 import com.pr7.jc_biztaxi_v4.data.model.userinfo.UserInfoResponse
+import com.pr7.jc_biztaxi_v4.data.pref.NOTIFICATION_MESSAGE
+import com.pr7.jc_biztaxi_v4.data.pref.NOTIFICATION_ORDER
+import com.pr7.jc_biztaxi_v4.data.pref.NOTIFICATION_SEAT_ID
 import com.pr7.jc_biztaxi_v4.data.pref.PHONE
 import com.pr7.jc_biztaxi_v4.data.pref.REFRESH_TOKEN
 import com.pr7.jc_biztaxi_v4.data.pref.SharefPrefManager
+import com.pr7.jc_biztaxi_v4.data.pref.THEME_CHANGE
 import com.pr7.jc_biztaxi_v4.data.pref.TOKEN
 import com.pr7.jc_biztaxi_v4.data.pref.USERNAME
 import com.pr7.jc_biztaxi_v4.ui.home.HomeViewModel
+import com.pr7.jc_biztaxi_v4.ui.home.ui.theme.JC_YaTaxi_PRv1Theme
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.CardStrokeColors
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.LayoutbackgroundColors
@@ -80,7 +92,7 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
     val mlivedatadirectionNew by homeViewModel.mlivedatadirectionNew.observeAsState()
     val iscomplated by homeViewModel.iscompleteddirectionNew.observeAsState()
 
-
+    var openDialog by remember { mutableStateOf(false) }
 
     var requestcountuserinfo by remember {
         mutableIntStateOf(0)
@@ -116,6 +128,52 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
     }
     var price by remember {
         mutableStateOf("")
+    }
+
+//    if (SharefPrefManager.loadBoolean(NOTIFICATION_ORDER)){
+//        myAlertDialog(message = SharefPrefManager.loadString(NOTIFICATION_MESSAGE).toString())
+//    }
+    showlogd(funname = "ORDER: ","${SharefPrefManager.loadBoolean(NOTIFICATION_ORDER)}")
+    if ( SharefPrefManager.loadBoolean(NOTIFICATION_ORDER)){
+        AlertDialog(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .fillMaxWidth(), // corner rounded//not working
+            onDismissRequest = {
+
+            },
+            title = { Text(text = stringResource(id = R.string.seatreservation)) },
+            text = { Text(text = SharefPrefManager.loadString(NOTIFICATION_MESSAGE).toString()) },
+            confirmButton = {
+                Button(onClick = {
+                    SharefPrefManager.saveBoolean(NOTIFICATION_ORDER,false)
+
+                    homeViewModel.orderseatConfirm(
+                        token = SharefPrefManager.loadString(TOKEN).toString(),
+                        id = SharefPrefManager.loadString(NOTIFICATION_SEAT_ID).toString().toInt(),
+                        orderSeat = OrderSeat(status = "confirmed")
+                    )
+                    navController.navigate(Screens.Discover.route)
+                }) {
+                    Text(text = stringResource(id = R.string.yes))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    SharefPrefManager.saveBoolean(NOTIFICATION_ORDER,false)
+
+                    homeViewModel.orderseatConfirm(
+                        token = SharefPrefManager.loadString(TOKEN).toString(),
+                        id = SharefPrefManager.loadString(NOTIFICATION_SEAT_ID).toString().toInt(),
+                        orderSeat = OrderSeat(status = "cancelled")
+                    )
+                    navController.navigate(Screens.Discover.route)
+                }) {
+                    Text(text = stringResource(id = R.string.no))
+
+                }
+            }
+        )
     }
 
     mlivedatauserinfo.let { result ->
@@ -216,215 +274,321 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
             }
         }, hour, minute, false
     )
+    var themechange by remember {
+        mutableStateOf(SharefPrefManager.loadBoolean(THEME_CHANGE))
+    }
 
-    Column(
-        modifier = Modifier
-            .background(LayoutbackgroundColors)
-            .fillMaxSize()
-    ) {
-        Spacer(modifier = Modifier.height(38.dp))
+    JC_YaTaxi_PRv1Theme(darkTheme = themechange) {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                .padding(15.dp)
+        ) {
+            //Spacer(modifier = Modifier.height(38.dp))
 
-        Column( modifier = Modifier
-            .padding(15.dp)) {
+
             Text(
 
                 text = stringResource(id = R.string.newdirection),
                 textAlign = TextAlign.Start,
                 fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                color = MaterialTheme.colorScheme.tertiary
                 //modifier = Modifier.align(Alignment.Center)
             )
             Spacer(modifier = Modifier.height(12.dp))
+            Column( modifier = Modifier
 
-            Text(
+                .weight(1f)
+                .fillMaxWidth()
+                .height(700.dp)
+                .verticalScroll(rememberScrollState())
+            ) {
+                Text(
 
-                text = stringResource(id = R.string.where),
-                textAlign = TextAlign.Start,
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                //modifier = Modifier.align(Alignment.Center)
-            )
+                    text = stringResource(id = R.string.where),
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                    //modifier = Modifier.align(Alignment.Center)
+                    color = MaterialTheme.colorScheme.tertiary
 
-            Spacer(modifier = Modifier.height(12.dp))
+                )
 
-            Card(
-                colors = CardDefaults.cardColors(Color.White),
-                border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-                onClick = {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Card(
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                    onClick = {
 //                    driverHomeVIewModel.succesregdr.value=true
 //                    driverHomeVIewModel.succesdisdr.value=false
 //                    driverHomeVIewModel.districtchoose.value="from"
 //                    navHostController.navigate(DriverBottomScreens.DriverRegions.route)
-                    navController.navigate(Screens.Regions.route)
-                    homeViewModel.districtchoose.value="from"
+                        navController.navigate(Screens.Regions.route)
+                        homeViewModel.districtchoose.value="from"
 
-                }
-
-            ) {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .fillMaxWidth()
+                    }
 
                 ) {
-                    Text(
-                        text = homeViewModel.districtfrom.value!!,
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    )
-
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrowdown),
-                        contentDescription = "Done",
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .width(27.dp)
-                            .height(45.dp)
-                    )
+                            .padding(horizontal = 15.dp)
+                            .fillMaxWidth()
+
+                    ) {
+                        Text(
+                            text = homeViewModel.districtfrom.value!!,
+                            modifier = Modifier.align(Alignment.CenterStart),
+                            color = MaterialTheme.colorScheme.tertiary
+
+                        )
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrowdown),
+                            contentDescription = "Done",
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .width(27.dp)
+                                .height(45.dp),
+                            tint =  MaterialTheme.colorScheme.tertiary
+                        )
 
 
 
 
 
 
+                    }
                 }
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
 
-            Text(
+                Text(
 
-                text = stringResource(id = R.string.whereto),
-                textAlign = TextAlign.Start,
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                //modifier = Modifier.align(Alignment.Center)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+                    text = stringResource(id = R.string.whereto),
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                    //modifier = Modifier.align(Alignment.Center)
+                    color = MaterialTheme.colorScheme.tertiary
 
-            Card(
-                colors = CardDefaults.cardColors(Color.White),
-                border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-                onClick = {
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Card(
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                    onClick = {
 //                    driverHomeVIewModel.succesregdr.value=true
 //                    driverHomeVIewModel.succesdisdr.value=false
 //                    driverHomeVIewModel.districtchoose.value="to"
 //                    navHostController.navigate(DriverBottomScreens.DriverRegions.route)
-                    navController.navigate(Screens.Regions.route)
-                    homeViewModel.districtchoose.value = "to"
-                }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .fillMaxWidth()
-
-                ) {
-                    Text(
-                        text = homeViewModel.districtto.value!!,
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    )
-
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrowdown),
-                        contentDescription = "Done",
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .width(27.dp)
-                            .height(45.dp)
-                    )
-
-
-
-
-
-
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-
-                text = stringResource(id = R.string.choosetime),
-                textAlign = TextAlign.Start,
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                //modifier = Modifier.align(Alignment.Center)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Card(
-                    colors = CardDefaults.cardColors(Color.White),
-                    modifier = Modifier.weight(1f),
-                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-                    onClick = {
-                        clockchange=true
-                        timePicker.show()
+                        navController.navigate(Screens.Regions.route)
+                        homeViewModel.districtchoose.value = "to"
                     }
                 ) {
-                    Row(
+                    Box(
                         modifier = Modifier
+                            .padding(horizontal = 15.dp)
                             .fillMaxWidth()
-                            .padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically
+
                     ) {
-                        Card(
-                            elevation = CardDefaults.cardElevation(1.dp),
-                            shape = CircleShape,
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            colors = CardDefaults.cardColors(LayoutbackgroundColors),
+                        Text(
+                            text = homeViewModel.districtto.value!!,
+                            modifier = Modifier.align(Alignment.CenterStart),
+                            color = MaterialTheme.colorScheme.tertiary
 
-                            ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.clockcircle),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(5.dp)
-                            )
+                        )
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrowdown),
+                            contentDescription = "Done",
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .width(27.dp)
+                                .height(45.dp),
+                            tint =  MaterialTheme.colorScheme.tertiary
+                        )
+
+
+
+
+
+
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+
+                    text = stringResource(id = R.string.choosetime),
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                    //modifier = Modifier.align(Alignment.Center)
+                    color = MaterialTheme.colorScheme.tertiary
+
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Card(
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                        modifier = Modifier.weight(1f),
+                        border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                        onClick = {
+                            clockchange=true
+                            timePicker.show()
                         }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Card(
+                                elevation = CardDefaults.cardElevation(1.dp),
+                                shape = CircleShape,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
 
-                        Spacer(modifier = Modifier.width(10.dp))
-
-
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.time),
-                                style = TextStyle(
-                                    fontSize = 12.sp,
-                                    lineHeight = 23.sp,
-                                    fontFamily = FontFamily(Font(R.font.mont_light)),
-                                    fontWeight = FontWeight(600),
-                                    color = Color(0xFF17334C),
+                                ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.clockcircle),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint =  MaterialTheme.colorScheme.tertiary
                                 )
-                            )
-                            Spacer(modifier = Modifier.height(7.dp))
+                            }
 
-                            Text(
-                                text = selectedTimeText,
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    lineHeight = 23.sp,
-                                    fontFamily = FontFamily(Font(R.font.mont_bold)),
-                                    fontWeight = FontWeight(700),
-                                    color = Color(0xFF17334C),
+                            Spacer(modifier = Modifier.width(10.dp))
+
+
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.time),
+                                    style = TextStyle(
+                                        fontSize = 12.sp,
+                                        lineHeight = 23.sp,
+                                        fontFamily = FontFamily(Font(R.font.mont_light)),
+                                        fontWeight = FontWeight(600),
+                                        color = MaterialTheme.colorScheme.tertiary
 
                                     )
-                            )
+                                )
+                                Spacer(modifier = Modifier.height(7.dp))
+
+                                Text(
+                                    text = selectedTimeText,
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        lineHeight = 23.sp,
+                                        fontFamily = FontFamily(Font(R.font.mont_bold)),
+                                        fontWeight = FontWeight(700),
+                                        color = MaterialTheme.colorScheme.tertiary
+
+
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Card(
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                clockchange = false
+                                timePicker.show()
+
+                            },
+                        border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Card(
+                                elevation = CardDefaults.cardElevation(1.dp),
+                                shape = CircleShape,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.clockcircle),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint =  MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.time),
+                                    style = TextStyle(
+                                        fontSize = 12.sp,
+                                        lineHeight = 23.sp,
+                                        fontFamily = FontFamily(Font(R.font.mont_light)),
+                                        fontWeight = FontWeight(600),
+                                        color = MaterialTheme.colorScheme.tertiary
+
+                                    )
+                                )
+                                Spacer(modifier = Modifier.height(7.dp))
+
+                                Text(
+                                    text = selectedTimeText2,
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        lineHeight = 23.sp,
+                                        fontFamily = FontFamily(Font(R.font.mont_bold)),
+                                        fontWeight = FontWeight(700),
+                                        color = MaterialTheme.colorScheme.tertiary
+
+                                    )
+                                )
+                            }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.width(15.dp))
-                Card(
-                    colors = CardDefaults.cardColors(Color.White),
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-                            clockchange=false
-                            timePicker.show()
 
-                        },
+                Spacer(modifier = Modifier.height(12.dp))
+
+
+
+
+
+
+
+                Text(
+
+                    text = stringResource(id = R.string.numberofpassengers),
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                    //modifier = Modifier.align(Alignment.Center)
+                    color = MaterialTheme.colorScheme.tertiary
+
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Card(
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                    modifier = Modifier.fillMaxWidth(),
                     border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                    onClick = {}
                 ) {
                     Row(
                         modifier = Modifier
@@ -436,14 +600,15 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
                             elevation = CardDefaults.cardElevation(1.dp),
                             shape = CircleShape,
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            colors = CardDefaults.cardColors(LayoutbackgroundColors)
+                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.clockcircle),
+                                painter = painterResource(id = R.drawable.passangeway),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .padding(5.dp)
+                                    .padding(5.dp),
+                                tint =  MaterialTheme.colorScheme.tertiary
                             )
                         }
 
@@ -452,333 +617,280 @@ fun driverDiscoverScreen(navController:NavHostController,homeViewModel: HomeView
 
                         Column {
                             Text(
-                                text = stringResource(id = R.string.time),
+                                text = stringResource(id = R.string.passangers),
                                 style = TextStyle(
                                     fontSize = 12.sp,
                                     lineHeight = 23.sp,
                                     fontFamily = FontFamily(Font(R.font.mont_light)),
                                     fontWeight = FontWeight(600),
-                                    color = Color(0xFF17334C),
+                                    color = MaterialTheme.colorScheme.tertiary
+
                                 )
                             )
                             Spacer(modifier = Modifier.height(7.dp))
 
                             Text(
-                                text = selectedTimeText2,
+                                text = passangercount.toString(),
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     lineHeight = 23.sp,
                                     fontFamily = FontFamily(Font(R.font.mont_bold)),
                                     fontWeight = FontWeight(700),
-                                    color = Color(0xFF17334C),
+                                    color = MaterialTheme.colorScheme.tertiary
+
                                 )
                             )
                         }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Row {
+                            Card(
+                                elevation = CardDefaults.cardElevation(1.dp),
+                                shape = CircleShape,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
+                                onClick = {
+                                    if (passangercount>0){
+                                        passangercount--
+                                    }
+
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.minus),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint =  MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Card(
+                                elevation = CardDefaults.cardElevation(1.dp),
+                                shape = CircleShape,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                colors = CardDefaults.cardColors(ButtonbackgroundLanguage),
+                                onClick = {
+                                    passangercount++
+
+                                }
+                            ) {
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.plus),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint =  Color.Black
+                                )
+                            }
+                        }
+
+
                     }
                 }
-            }
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Text(
 
+                    text = stringResource(id = R.string.seatassigment),
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                    //modifier = Modifier.align(Alignment.Center)
+                    color = MaterialTheme.colorScheme.tertiary
 
-
-
-
-
-
-            Text(
-
-                text = stringResource(id = R.string.numberofpassengers),
-                textAlign = TextAlign.Start,
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                //modifier = Modifier.align(Alignment.Center)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Card(
-                colors = CardDefaults.cardColors(Color.White),
-                modifier = Modifier.fillMaxWidth(),
-                border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-                onClick = {}
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Card(
-                        elevation = CardDefaults.cardElevation(1.dp),
-                        shape = CircleShape,
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        colors = CardDefaults.cardColors(LayoutbackgroundColors)
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                        modifier = Modifier
+
+                            .clickable {
+                                navController.navigate(Screens.SeatChoose.route)
+
+                            }
+                            .weight(1f),
+                        border = BorderStroke(width = 1.dp,color = CardStrokeColors),
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.passangeway),
-                            contentDescription = "",
+                        Row(
                             modifier = Modifier
-                                .size(40.dp)
-                                .padding(5.dp)
-                        )
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Card(
+                                elevation = CardDefaults.cardElevation(1.dp),
+                                shape = CircleShape,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.seat),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint =  MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.seatposition),
+                                    style = TextStyle(
+                                        fontSize = 12.sp,
+                                        lineHeight = 23.sp,
+                                        fontFamily = FontFamily(Font(R.font.mont_light)),
+                                        fontWeight = FontWeight(600),
+                                        color = MaterialTheme.colorScheme.tertiary
+
+                                    )
+                                )
+                                Spacer(modifier = Modifier.height(7.dp))
+
+                                Text(
+                                    text = stringResource(id = R.string.all),
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        lineHeight = 23.sp,
+                                        fontFamily = FontFamily(Font(R.font.mont_bold)),
+                                        fontWeight = FontWeight(700),
+                                        color = MaterialTheme.colorScheme.tertiary
+
+                                    )
+                                )
+                            }
+                        }
+
+
                     }
 
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Card(
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground),
+                        modifier = Modifier
 
+                            .clickable {
+                                //navHostController.navigate(DriverBottomScreens.DriverSeatChoose.route)
 
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.passangers),
-                            style = TextStyle(
-                                fontSize = 12.sp,
-                                lineHeight = 23.sp,
-                                fontFamily = FontFamily(Font(R.font.mont_light)),
-                                fontWeight = FontWeight(600),
-                                color = Color(0xFF17334C),
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(7.dp))
+                            }
+                            .weight(1f),
+                        border = BorderStroke(width = 1.dp,color = CardStrokeColors),
+                    ){
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = price,
+                            onValueChange = {
 
-                        Text(
-                            text = passangercount.toString(),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                lineHeight = 23.sp,
-                                fontFamily = FontFamily(Font(R.font.mont_bold)),
-                                fontWeight = FontWeight(700),
-                                color = Color(0xFF17334C),
-                            )
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Row {
-                        Card(
-                            elevation = CardDefaults.cardElevation(1.dp),
-                            shape = CircleShape,
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            colors = CardDefaults.cardColors(LayoutbackgroundColors),
-                            onClick = {
-                                if (passangercount>0){
-                                    passangercount--
+                                if (it.length < 10) {
+                                    price = it
                                 }
 
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.minus),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(5.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Card(
-                            elevation = CardDefaults.cardElevation(1.dp),
-                            shape = CircleShape,
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            colors = CardDefaults.cardColors(ButtonbackgroundLanguage),
-                            onClick = {
-                                passangercount++
-
-                            }
-                        ) {
-
-                            Icon(
-                                painter = painterResource(id = R.drawable.plus),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(5.dp)
-                            )
-                        }
-                    }
+                            },
+                            placeholder = {
+                                Text(text = "UZS")
+                            },
 
 
-                }
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+                            maxLines = 1,
 
-            Text(
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
 
-                text = stringResource(id = R.string.seatassigment),
-                textAlign = TextAlign.Start,
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                //modifier = Modifier.align(Alignment.Center)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Card(
-                    colors = CardDefaults.cardColors(Color.White),
-                    modifier = Modifier
-
-                        .clickable {
-                            navController.navigate(Screens.SeatChoose.route)
-
-                        }
-                        .weight(1f),
-                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Card(
-                            elevation = CardDefaults.cardElevation(1.dp),
-                            shape = CircleShape,
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            colors = CardDefaults.cardColors(LayoutbackgroundColors)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.seat),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(5.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(10.dp))
-
-
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.seatposition),
-                                style = TextStyle(
-                                    fontSize = 12.sp,
-                                    lineHeight = 23.sp,
-                                    fontFamily = FontFamily(Font(R.font.mont_light)),
-                                    fontWeight = FontWeight(600),
-                                    color = Color(0xFF17334C),
+                            textStyle = LocalTextStyle.current.copy(
+                                textAlign = TextAlign.Start,
+                                fontSize = 15.sp
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedTextColor = MaterialTheme.colorScheme.tertiary
                                 )
-                            )
-                            Spacer(modifier = Modifier.height(7.dp))
-
-                            Text(
-                                text = stringResource(id = R.string.all),
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    lineHeight = 23.sp,
-                                    fontFamily = FontFamily(Font(R.font.mont_bold)),
-                                    fontWeight = FontWeight(700),
-                                    color = Color(0xFF17334C),
-                                )
-                            )
-                        }
-                    }
-
-
-                }
-
-                Spacer(modifier = Modifier.width(5.dp))
-                Card(
-                    colors = CardDefaults.cardColors(Color.White),
-                    modifier = Modifier
-
-                        .clickable {
-                            //navHostController.navigate(DriverBottomScreens.DriverSeatChoose.route)
-
-                        }
-                        .weight(1f),
-                    border = BorderStroke(width = 1.dp,color = CardStrokeColors),
-                ){
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = price,
-                        onValueChange = {
-
-                            if (it.length < 10) {
-                                price = it
-                            }
-
-                        },
-                        placeholder = {
-                            Text(text = "UZS")
-                        },
-
-
-                        maxLines = 1,
-
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp
-                        ),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedBorderColor = Color.Transparent)
-
-                    )
-                }
-            }
-
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .height(54.dp)
-                    .clickable {
-                        //navController.navigate(Screens.Orders.route)
-
-                        if (price.isNotEmpty() &&homeViewModel.regfromid.value!!>0 && homeViewModel.disfromid.value!!>0 && homeViewModel.regtoid.value!!>0 && homeViewModel.distoid.value!!>0){
-                            val calendarr = Calendar.getInstance()
-                            var year = calendarr[Calendar.YEAR]
-                            var month = calendarr[Calendar.MONTH]+ 1
-                            var day = calendarr[Calendar.DAY_OF_MONTH]
-
-                            var secondr = calendarr[Calendar.SECOND]
-                            var starttime = "$year-$month-${day}T$selectedTimeText:${secondr}Z"
-                            var endtime = "$year-$month-${day}T$selectedTimeText2:${secondr}Z"
-                            homeViewModel.selectedtime1.value=starttime
-                            homeViewModel.selectedtime2.value=endtime
-                            homeViewModel.price.value=price.toInt()
-                            showlogd(funname = "time", text = starttime)
-                            showlogd(funname = "reg dis", text = "${homeViewModel.regfromid.value} ${homeViewModel.disfromid.value} to ${homeViewModel.regtoid.value} ${homeViewModel.distoid.value}")
-                            showlogd(funname = "price", text = price)
-                            showlogd(funname = "endtime", text = endtime)
-
-
-                            //go request
-
-                            homeViewModel.directionNew(
-                                token = SharefPrefManager.loadString(TOKEN).toString(),
-                                startdate = homeViewModel.selectedtime1.value!!,
-                                enddate = homeViewModel.selectedtime2.value!!,
-                                price = homeViewModel.price.value!!,
-                                fromdisid = homeViewModel.disfromid.value!!,
-                                todisid = homeViewModel.distoid.value!!,
-                                fromregid = homeViewModel.regfromid.value!!,
-                                toregid = homeViewModel.regtoid.value!!
-                            )
-                            requestcount=1
-
-
-                        }
-
-
-                    },
-                shape = RoundedCornerShape(15.dp),
-                color = ButtonbackgroundLanguage
-            ) {
-                Column(verticalArrangement = Arrangement.Center) {
-
-                    Text(
-                        text = stringResource(id = R.string.adddirection),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                        fontSize = 17.sp,
 
                         )
+                    }
                 }
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(54.dp)
+                        .clickable {
+                            //navController.navigate(Screens.Orders.route)
+
+                            if (price.isNotEmpty() && homeViewModel.regfromid.value!! > 0 && homeViewModel.disfromid.value!! > 0 && homeViewModel.regtoid.value!! > 0 && homeViewModel.distoid.value!! > 0) {
+                                val calendarr = Calendar.getInstance()
+                                var year = calendarr[Calendar.YEAR]
+                                var month = calendarr[Calendar.MONTH] + 1
+                                var day = calendarr[Calendar.DAY_OF_MONTH]
+
+                                var secondr = calendarr[Calendar.SECOND]
+                                var starttime = "$year-$month-${day}T$selectedTimeText:${secondr}Z"
+                                var endtime = "$year-$month-${day}T$selectedTimeText2:${secondr}Z"
+                                homeViewModel.selectedtime1.value = starttime
+                                homeViewModel.selectedtime2.value = endtime
+                                homeViewModel.price.value = price.toInt()
+                                showlogd(funname = "time", text = starttime)
+                                showlogd(
+                                    funname = "reg dis",
+                                    text = "${homeViewModel.regfromid.value} ${homeViewModel.disfromid.value} to ${homeViewModel.regtoid.value} ${homeViewModel.distoid.value}"
+                                )
+                                showlogd(funname = "price", text = price)
+                                showlogd(funname = "endtime", text = endtime)
+
+
+                                //go request
+
+                                homeViewModel.directionNew(
+                                    token = SharefPrefManager
+                                        .loadString(TOKEN)
+                                        .toString(),
+                                    startdate = homeViewModel.selectedtime1.value!!,
+                                    enddate = homeViewModel.selectedtime2.value!!,
+                                    price = homeViewModel.price.value!!,
+                                    fromdisid = homeViewModel.disfromid.value!!,
+                                    todisid = homeViewModel.distoid.value!!,
+                                    fromregid = homeViewModel.regfromid.value!!,
+                                    toregid = homeViewModel.regtoid.value!!
+                                )
+                                requestcount = 1
+
+
+                            }
+
+
+                        },
+                    shape = RoundedCornerShape(15.dp),
+                    color = ButtonbackgroundLanguage
+                ) {
+                    Column(verticalArrangement = Arrangement.Center) {
+
+                        Text(
+                            text = stringResource(id = R.string.adddirection),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                            fontSize = 17.sp,
+                            color = Color.Black
+
+
+                        )
+                    }
+
+                }
+                Spacer(modifier = Modifier.height(75.dp))
 
             }
 
         }
-
     }
+
+
 }

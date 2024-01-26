@@ -21,6 +21,9 @@ class OTPViewModel constructor():ViewModel() {
 
 
 
+
+
+
     fun otpverify(code:String)=viewModelScope.launch {
         iscompletedotp.postValue(true)
         try {
@@ -62,5 +65,7 @@ class OTPViewModel constructor():ViewModel() {
         }
 
     }
+
+
 
 }

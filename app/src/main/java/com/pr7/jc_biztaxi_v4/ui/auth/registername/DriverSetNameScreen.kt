@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -51,6 +52,9 @@ import com.pr7.jc_biztaxi_v4.ui.home.HomeActivity
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.FocusedBorderColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import com.pr7.jc_biztaxi_v4.data.pref.GENDER
+import com.pr7.jc_biztaxi_v4.ui.change.ChangeActivity
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.Bworn
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.LIghtBLue
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.Orange
@@ -59,7 +63,10 @@ import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.Orange
 @ExperimentalMaterial3Api
 //@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun registerdrivernameScreen(navHostController:NavHostController,registerNameViewModel: RegisterNameViewModel) {
+fun registerdrivernameScreen(
+    navHostController: NavHostController,
+    registerNameViewModel: RegisterNameViewModel
+) {
 
     val carnamelivedata by registerNameViewModel.carname.observeAsState()
     val caridlivedata by registerNameViewModel.carid.observeAsState()
@@ -77,29 +84,28 @@ fun registerdrivernameScreen(navHostController:NavHostController,registerNameVie
         mutableStateOf(false)
     }
 
-    if (complatedcarreg==true && complateduserchange==true){
-        SharefPrefManager.saveBoolean(USERNAMED,true)
+    if (complatedcarreg == true && complateduserchange == true) {
+        SharefPrefManager.saveBoolean(USERNAMED, true)
         context.startActivity(Intent(context, HomeActivity::class.java))
         context.finish()
     }
 
-    mlivedatacarreg.let {result ->
+    mlivedatacarreg.let { result ->
         result?.onSuccess {
-            complatedcarreg=true
+            complatedcarreg = true
         }
         result?.onFailure {
 
         }
     }
-    mlivedatauserinfo.let {result->
+    mlivedatauserinfo.let { result ->
         result?.onSuccess {
-           complateduserchange=true
+            complateduserchange = true
         }
         result?.onFailure {
 
         }
     }
-
 
 
     var name by remember {
@@ -117,306 +123,345 @@ fun registerdrivernameScreen(navHostController:NavHostController,registerNameVie
     }
 
 
-
+    val configuration = LocalConfiguration.current
+    val screenHeight = (configuration.screenHeightDp).dp
+    val screenWidth = configuration.screenWidthDp.dp
 
 
     Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+    ) {
+        //Spacer(modifier = Modifier.height(35.dp))
+        Box(
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Spacer(modifier = Modifier.height(35.dp))
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Card(
-                    modifier = Modifier.size(38.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    onClick = {
+            Card(
+                modifier = Modifier.size(38.dp),
+                shape = RoundedCornerShape(8.dp),
+                onClick = {
+                    context.startActivity(Intent(context, ChangeActivity::class.java))
 
-                    }
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.arrowleft),
-                            contentDescription = "logo2",
-                            modifier = Modifier
-                                .size(13.dp)
-                        )
-                    }
                 }
-
-                Spacer(modifier = Modifier.width(15.dp))
-                Text(
-
-                    text = stringResource(id = R.string.register),
-                    textAlign = TextAlign.Start,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(modifier = Modifier.height(25.dp))
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
-                    text = stringResource(id = R.string.selectcarmodel),
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = carnamelivedata.toString(),
-                    onValueChange = {
-
-                    },
-                    placeholder = {
-                        Text(text = stringResource(id = R.string.choose))
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-
-                            navHostController.navigate(CarListScreens.CarLIst.route)
-
-                        }) {
-                            Icon(painter = painterResource(
-                                id = R.drawable.baseline_directions_car_24),
-                                contentDescription ="car" )
-                        }
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-
-                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
-                    text = stringResource(id = R.string.carcolor),
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = carcolorlanglivedata.toString(),
-                    onValueChange = {
-                        if (it.length < 15) {
-                            name2 = it
-                        }
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-
-                            navHostController.navigate(CarListScreens.CarColor.route)
-
-                        }) {
-                            Icon(painter = painterResource(
-                                id = R.drawable.baseline_directions_car_24),
-                                contentDescription ="car",
-                                tint = when(carcolorlivedata){
-                                    "red"->{Color.Red}
-                                    "blue"->{Color.Blue}
-                                    "lightblue"->{LIghtBLue}
-                                    "orange"->{Orange}
-                                    "white"->{Color.White}
-                                    "black"->{Color.Black}
-                                    "yellow"->{Color.Yellow}
-                                    "brown"->{ Bworn}
-                                    "silver"->{Color.LightGray}
-                                    else -> {Color.Black}
-                                }
-
-                            )
-                        }
-                    },
-                    placeholder = {
-                        Text(text = stringResource(id = R.string.choose))
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-
-                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
-                    text = stringResource(id = R.string.name),
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    onValueChange = {
-                        if (it.length < 15) {
-                            name = it
-                        }
-                    },
-                    placeholder = {
-                        Text(text = stringResource(id = R.string.enteryourname))
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-
-                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
-                    text = stringResource(id = R.string.surname),
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name2,
-                    onValueChange = {
-                        if (it.length < 15) {
-                            name2 = it
-                        }
-                    },
-                    placeholder = {
-                        Text(text = stringResource(id = R.string.enteryoursurname))
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-
-                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
-                    text = stringResource(id = R.string.number),
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name3,
-                    onValueChange = {
-                        if (it.length < 15) {
-                            name3 = it
-                        }
-                    },
-                    placeholder = {
-                        Text(text = "01X507UB")
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-
-                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
-                    text = stringResource(id = R.string.driverpassportnumber),
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.mont_semibold))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name4,
-                    onValueChange = {
-                        if (it.length < 15) {
-                            name4 = it
-                        }
-                    },
-                    placeholder = {
-                        Text(text = "KA1234567")
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-
-                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrowleft),
+                        contentDescription = "logo2",
+                        modifier = Modifier
+                            .size(13.dp)
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-            Surface(
+            Spacer(modifier = Modifier.width(15.dp))
+            Text(
+
+                text = stringResource(id = R.string.register),
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        Column(
+            modifier = Modifier
+                .width(screenWidth)
+                .wrapContentHeight()
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(modifier = Modifier.height(25.dp))
+            Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-                    .height(54.dp)
-                    .clickable {
-                        registerNameViewModel.careregister(
-                            token = SharefPrefManager
-                                .loadString(TOKEN)
-                                .toString(),
-                            carid = caridlivedata!!,
-                            carcolor = carcolorlivedata!!,
-                            carnumber = name3
+                    .padding(start = 20.dp),
+                text = stringResource(id = R.string.selectcarmodel),
+                textAlign = TextAlign.Start,
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold))
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = carnamelivedata.toString(),
+                onValueChange = {
+
+                },
+                placeholder = {
+                    Text(text = stringResource(id = R.string.choose))
+                },
+                trailingIcon = {
+                    IconButton(onClick = {
+
+                        navHostController.navigate(CarListScreens.CarLIst.route)
+
+                    }) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.baseline_directions_car_24
+                            ),
+                            contentDescription = "car"
                         )
-                        registerNameViewModel.changeuserinfo(
-                            token = SharefPrefManager
-                                .loadString(TOKEN)
-                                .toString(),
-                            firstname = name,
-                            lastname = name2,
-                            usertype = DRIVER
+                    }
+                },
+                maxLines = 1,
+                singleLine = true,
+
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = FocusedBorderColor,
+                    focusedLabelColor = FocusedBorderColor
+                )
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp),
+                text = stringResource(id = R.string.carcolor),
+                textAlign = TextAlign.Start,
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold))
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = carcolorlanglivedata.toString(),
+                onValueChange = {
+                    if (it.length < 15) {
+                        name2 = it
+                    }
+                },
+                trailingIcon = {
+                    IconButton(onClick = {
+
+                        navHostController.navigate(CarListScreens.CarColor.route)
+
+                    }) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.baseline_directions_car_24
+                            ),
+                            contentDescription = "car",
+                            tint = when (carcolorlivedata) {
+                                "red" -> {
+                                    Color.Red
+                                }
+
+                                "blue" -> {
+                                    Color.Blue
+                                }
+
+                                "lightblue" -> {
+                                    LIghtBLue
+                                }
+
+                                "orange" -> {
+                                    Orange
+                                }
+
+                                "white" -> {
+                                    Color.White
+                                }
+
+                                "black" -> {
+                                    Color.Black
+                                }
+
+                                "yellow" -> {
+                                    Color.Yellow
+                                }
+
+                                "brown" -> {
+                                    Bworn
+                                }
+
+                                "silver" -> {
+                                    Color.LightGray
+                                }
+
+                                else -> {
+                                    Color.Black
+                                }
+                            }
+
                         )
+                    }
+                },
+                placeholder = {
+                    Text(text = stringResource(id = R.string.choose))
+                },
+                maxLines = 1,
+                singleLine = true,
 
-                        //USERNAMED true need
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = FocusedBorderColor,
+                    focusedLabelColor = FocusedBorderColor
+                )
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp),
+                text = stringResource(id = R.string.name),
+                textAlign = TextAlign.Start,
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold))
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name,
+                onValueChange = {
+                    if (it.length < 15) {
+                        name = it
+                    }
+                },
+                placeholder = {
+                    Text(text = stringResource(id = R.string.enteryourname))
+                },
+                maxLines = 1,
+                singleLine = true,
 
-                    },
-                shape = RoundedCornerShape(15.dp),
-                color = ButtonbackgroundLanguage
-            ) {
-                Column(verticalArrangement = Arrangement.Center) {
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = FocusedBorderColor,
+                    focusedLabelColor = FocusedBorderColor
+                )
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp),
+                text = stringResource(id = R.string.surname),
+                textAlign = TextAlign.Start,
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold))
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name2,
+                onValueChange = {
+                    if (it.length < 15) {
+                        name2 = it
+                    }
+                },
+                placeholder = {
+                    Text(text = stringResource(id = R.string.enteryoursurname))
+                },
+                maxLines = 1,
+                singleLine = true,
 
-                    Text(
-                        text = stringResource(id = R.string.register),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                        fontSize = 17.sp,
-
-                        )
-                }
-
-            }
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = FocusedBorderColor,
+                    focusedLabelColor = FocusedBorderColor
+                )
+            )
             Spacer(modifier = Modifier.height(5.dp))
 
 
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp),
+                text = stringResource(id = R.string.number),
+                textAlign = TextAlign.Start,
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold))
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name3,
+                onValueChange = {
+                    if (it.length < 15) {
+                        name3 = it
+                    }
+                },
+                placeholder = {
+                    Text(text = "01X507UB")
+                },
+                maxLines = 1,
+                singleLine = true,
+
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = FocusedBorderColor,
+                    focusedLabelColor = FocusedBorderColor
+                )
+            )
+
+
+            Spacer(modifier = Modifier.height(5.dp))
 
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .height(54.dp)
+                .clickable {
+                    registerNameViewModel.careregister(
+                        token = SharefPrefManager
+                            .loadString(TOKEN)
+                            .toString(),
+                        carid = caridlivedata!!,
+                        carcolor = carcolorlivedata!!,
+                        carnumber = name3
+                    )
+                    registerNameViewModel.changeuserinfo(
+                        token = SharefPrefManager
+                            .loadString(TOKEN)
+                            .toString(),
+                        firstname = name,
+                        lastname = name2,
+                        usertype = DRIVER,
+                        gender =  when(SharefPrefManager.loadString(GENDER).toString()){
+                            "Male"->{"male"}
+                            "Мужской"->{"male"}
+                            "Erkak"->{"male"}
+                            "Женский"->{"female"}
+                            "Female"->{"female"}
+                            "Ayol"->{"female"}
+
+                            else->{"male"}
+                        }
+                    )
+
+                    //USERNAMED true need
+
+                },
+            shape = RoundedCornerShape(15.dp),
+            color = ButtonbackgroundLanguage
+        ) {
+            Column(verticalArrangement = Arrangement.Center) {
+
+                Text(
+                    text = stringResource(id = R.string.register),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                    fontSize = 17.sp,
+
+                    )
+            }
+
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+
+
+    }
 
 
 }

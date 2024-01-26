@@ -18,15 +18,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -35,21 +39,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pr7.jc_biztaxi_v4.R
+import com.pr7.jc_biztaxi_v4.data.pref.GENDER
+import com.pr7.jc_biztaxi_v4.data.pref.MAN
 import com.pr7.jc_biztaxi_v4.data.pref.PASSANGER
 import com.pr7.jc_biztaxi_v4.data.pref.SharefPrefManager
 import com.pr7.jc_biztaxi_v4.data.pref.TOKEN
 import com.pr7.jc_biztaxi_v4.data.pref.USERNAMED
+import com.pr7.jc_biztaxi_v4.data.pref.WOMAN
+import com.pr7.jc_biztaxi_v4.ui.change.ChangeActivity
 import com.pr7.jc_biztaxi_v4.ui.home.HomeActivity
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.ButtonbackgroundLanguage
 import com.pr7.jc_biztaxi_v4.ui.splash.ui.theme.FocusedBorderColor
@@ -77,10 +89,10 @@ fun registerpassangernameScreen() {
     var checked by remember {
         mutableStateOf(false)
     }
-    val scope= rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current as Activity
 
-    val registerNameViewModel:RegisterNameViewModel= viewModel()
+    val registerNameViewModel: RegisterNameViewModel = viewModel()
 
     val userinfochane by registerNameViewModel.mlivedataUserInfoch.observeAsState()
 
@@ -88,25 +100,21 @@ fun registerpassangernameScreen() {
     var counter by remember {
         mutableStateOf(0)
     }
-    if (counter==1){
+    if (counter == 1) {
         //need request for set user name
         context.startActivity(Intent(context, HomeActivity::class.java))
         context.finish()
     }
 
-    userinfochane.let {result ->
+    userinfochane.let { result ->
 
         result?.onSuccess {
-            SharefPrefManager.saveBoolean(USERNAMED,true)
+            SharefPrefManager.saveBoolean(USERNAMED, true)
             showlogd(funname = "NAMED", text = " COMPLATED")
-            counter=counter+1
+            counter = counter + 1
         }
 
     }
-
-
-
-
 
 
     var name by remember {
@@ -120,7 +128,7 @@ fun registerpassangernameScreen() {
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Spacer(modifier = Modifier.height(35.dp))
+        //Spacer(modifier = Modifier.height(35.dp))
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {
@@ -128,7 +136,7 @@ fun registerpassangernameScreen() {
                 modifier = Modifier.size(38.dp),
                 shape = RoundedCornerShape(8.dp),
                 onClick = {
-
+                    context.startActivity(Intent(context, ChangeActivity::class.java))
                 }
             ) {
                 Box(
@@ -180,14 +188,17 @@ fun registerpassangernameScreen() {
             singleLine = true,
 
             //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = FocusedBorderColor,
+                focusedLabelColor = FocusedBorderColor
+            )
         )
         Spacer(modifier = Modifier.height(15.dp))
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 20.dp),
-            text =stringResource(id = R.string.surname),
+            text = stringResource(id = R.string.surname),
             textAlign = TextAlign.Start,
             fontSize = 15.sp,
             fontFamily = FontFamily(Font(R.font.mont_semibold))
@@ -208,27 +219,16 @@ fun registerpassangernameScreen() {
             singleLine = true,
 
             //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = FocusedBorderColor,
+                focusedLabelColor = FocusedBorderColor
+            )
         )
         Spacer(modifier = Modifier.height(15.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = checked,
-                onCheckedChange = { checked_ ->
-                    checked = checked_
-                }
-            )
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp),
-                text = stringResource(id = R.string.privace),
-                textAlign = TextAlign.Start,
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.mont_light))
-            )
-        }
+        RadioButtonSample3()
+        Spacer(modifier = Modifier.height(15.dp))
+
 
 
 
@@ -239,13 +239,54 @@ fun registerpassangernameScreen() {
                 .padding(16.dp)
                 .height(54.dp)
                 .clickable {
-                    if (name.length>0 && name2.length>0){
+                    if (name.length > 0 && name2.length > 0) {
                         registerNameViewModel.changeuserinfo(
                             token = SharefPrefManager
                                 .loadString(TOKEN)
-                                .toString(), firstname = name, lastname = name2, PASSANGER
+                                .toString(),
+                            firstname = name,
+                            lastname = name2,
+                            usertype = PASSANGER,
+                            gender = when (SharefPrefManager
+                                .loadString(GENDER)
+                                .toString()) {
+                                "Male" -> {
+                                    "male"
+                                }
+
+                                "Мужской" -> {
+                                    "male"
+                                }
+
+                                "Erkak" -> {
+                                    "male"
+                                }
+
+                                "Женский" -> {
+                                    "female"
+                                }
+
+                                "Female" -> {
+                                    "female"
+                                }
+
+                                "Ayol" -> {
+                                    "female"
+                                }
+
+                                else -> {
+                                    "male"
+                                }
+                            }
                         )
                     }
+
+                    showlogd(
+                        "GENDER",
+                        text = SharefPrefManager
+                            .loadString(GENDER)
+                            .toString()
+                    )
 
 
                 },
@@ -268,6 +309,140 @@ fun registerpassangernameScreen() {
         Spacer(modifier = Modifier.height(15.dp))
 
 
+    }
+}
+
+
+@Composable
+fun KindRadioGroup(
+    mItems: List<String>,
+    selected: String,
+    setSelected: (selected: String) -> Unit,
+) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            mItems.forEach { item ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = selected == item,
+                        onClick = {
+                            setSelected(item)
+                        },
+                        enabled = true,
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = Color.Black
+                        )
+                    )
+                    Text(text = item, modifier = Modifier.padding(start = 8.dp))
+                }
+            }
+        }
+
+}
+
+
+@Composable
+fun RadioButtonSample3() {
+    val list = listOf(stringResource(id = R.string.male), stringResource(id = R.string.female))
+    val (selected, setSelected) = remember { mutableStateOf("") }
+    KindRadioGroup(mItems = list, selected = selected, setSelected = setSelected)
+    showlogd("KIND radio group", text = selected)
+    if (selected.isNotEmpty()) {
+        SharefPrefManager.saveString(GENDER, selected)
+    }
+}
+
+@Composable
+fun RadioButtonSample() {
+    val radioOptions =
+        listOf(stringResource(id = R.string.male), stringResource(id = R.string.female))
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    //showlogd("radio button gender:",selectedOption)
+
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        radioOptions.forEach { text ->
+            Row(
+                Modifier
+                    .selectable(
+                        selected = (text == selectedOption),
+                        onClick = {
+//                            showlogd("row button gender",selectedOption)
+//                            SharefPrefManager.saveString(GENDER, selectedOption)
+//                            onOptionSelected(text)
+
+                            //SharefPrefManager.saveString(GENDER, WOMAN)
+                        }
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+                RadioButton(
+                    selected = (text == selectedOption),
+                    onClick = {
+                        showlogd("radio button gender", selectedOption)
+                        SharefPrefManager.saveString(GENDER, selectedOption)
+                        onOptionSelected(text)
+
+
+                    }
+                )
+                Text(
+                    text = text,
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun RadioButtonSample2() {
+    val radioOptions =
+        listOf(stringResource(id = R.string.male), stringResource(id = R.string.female))
+    var selected by remember { mutableStateOf(true) }
+    //showlogd("radio button gender:",selectedOption)
+    // SharefPrefManager.saveString(GENDER, MAN)
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+
+        ) {
+
+        RadioButton(
+            selected = (selected),
+            onClick = {
+                showlogd("radio button gender", MAN)
+                SharefPrefManager.saveString(GENDER, MAN)
+
+                selected = !selected
+
+            }
+        )
+        Text(
+            text = stringResource(id = R.string.male),
+        )
+        RadioButton(
+            selected = (!selected),
+            onClick = {
+
+                selected = !selected
+                showlogd("radio button gender", WOMAN)
+                SharefPrefManager.saveString(GENDER, WOMAN)
+
+
+            }
+        )
+        Text(
+            text = stringResource(id = R.string.female),
+        )
+
 
     }
 }
+

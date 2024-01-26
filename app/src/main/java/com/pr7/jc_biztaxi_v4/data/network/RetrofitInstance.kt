@@ -1,6 +1,8 @@
 package com.pr7.jc_biztaxi_v4.data.network
 
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.pr7.jc_biztaxi_v4.utils.CONTEXT
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,14 +18,14 @@ object RetrofitInstance {
 //        .build()!!
 
     var okHttpClient: OkHttpClient =OkHttpClient().newBuilder()
-        //.addInterceptor(ChuckerInterceptor(CONTEXT))
+       .addInterceptor(ChuckerInterceptor(CONTEXT))
         .connectTimeout(100, TimeUnit.SECONDS)
         .readTimeout(100, TimeUnit.SECONDS)
         .writeTimeout(100, TimeUnit.SECONDS)
         .build()
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("https://yataxi.testing.uz/")
+        .baseUrl("https://stagingyataxi.testing.uz/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

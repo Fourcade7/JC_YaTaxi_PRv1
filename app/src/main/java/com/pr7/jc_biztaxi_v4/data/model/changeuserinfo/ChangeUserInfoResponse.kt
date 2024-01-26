@@ -6,6 +6,7 @@ data class ChangeUserInfoResponse(
     val last_name: String?=null,
     val passport: String?=null,
     val phone: String?=null,
+    val gender:String?=null,
     val two_step_password: Boolean?=null,
     val user_type: String?=null
 )

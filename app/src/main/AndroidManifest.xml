@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
 
     <application
         android:name=".utils.MyApp"
@@ -15,6 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JC_YaTaxi_PRv1"
         tools:targetApi="34">
+        <service
+            android:name=".data.firebase.MyFirebaseService"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".ui.auth.registername.RegisterDriverNameActivity"
             android:exported="false"

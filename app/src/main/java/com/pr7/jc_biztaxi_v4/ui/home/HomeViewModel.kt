@@ -5,8 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pr7.jc_biztaxi_v4.data.model.directions2.DirectionsR2
 import com.pr7.jc_biztaxi_v4.data.model.directions_active.DirectionsActiveResponse
+import com.pr7.jc_biztaxi_v4.data.model.firebase_fcm.FirebaseFCM
+import com.pr7.jc_biztaxi_v4.data.model.firebase_fcm.FirebaseFCMResponse
 import com.pr7.jc_biztaxi_v4.data.model.newdirection.request.DirectionNew
 import com.pr7.jc_biztaxi_v4.data.model.newdirection.response.DirectionNewResponse
+import com.pr7.jc_biztaxi_v4.data.model.newseat.NewSeat
+import com.pr7.jc_biztaxi_v4.data.model.newseat.NewSeatResponse
+import com.pr7.jc_biztaxi_v4.data.model.orderseat.OrderSeat
+import com.pr7.jc_biztaxi_v4.data.model.orderseat.OrderSeatResponse
 import com.pr7.jc_biztaxi_v4.data.model.refresh_token.RefreshToken
 import com.pr7.jc_biztaxi_v4.data.model.refresh_token.RefreshTokenResponse
 import com.pr7.jc_biztaxi_v4.data.model.regions.DistrictsResponse
@@ -39,6 +45,15 @@ class HomeViewModel constructor():ViewModel() {
     val mlivedataactiveDirection= MutableLiveData<Result<ArrayList<DirectionsActiveResponse>>>()
     val iscompletedactiveDirection= MutableLiveData<Boolean>(false)
 
+    //FIREBASE
+    val mlivedataFirebaseFCM= MutableLiveData<Result<FirebaseFCMResponse>>()
+
+    //seatnew
+    val mlivedatanewseat= MutableLiveData<Result<NewSeatResponse>>()
+    //seatconfirmorder
+    val mlivedataseatconfirm= MutableLiveData<Result<OrderSeatResponse>>()
+
+
 
 
 
@@ -52,10 +67,19 @@ class HomeViewModel constructor():ViewModel() {
     val regtoid=MutableLiveData<Int?>(0)
     val disfromid=MutableLiveData<Int?>(0)
     val distoid=MutableLiveData<Int?>(0)
+
     val selectedtime1=MutableLiveData<String?>("")
     val selectedtime2=MutableLiveData<String?>("")
     val price=MutableLiveData<Int?>(0)
     val username=MutableLiveData<String?>("")
+
+    //seatid
+    val seatid1=MutableLiveData<Int?>(0)
+    val seatid2=MutableLiveData<Int?>(0)
+    val seatid3=MutableLiveData<Int?>(0)
+    val seatid4=MutableLiveData<Int?>(0)
+    //directionid
+    val directionid=MutableLiveData<Int?>(0)
 
 
 
@@ -65,11 +89,8 @@ class HomeViewModel constructor():ViewModel() {
             val response=api.getUserinfo(token = "Bearer $token")
             if (response.isSuccessful){
                 mlivedataUserInfo.postValue(Result.success(response.body()!!))
-
             }else{
                 mlivedataUserInfo.postValue(Result.failure(Exception(response.errorBody()!!.string())))
-
-
             }
             iscompleteduserinfo.postValue(false)
 
@@ -83,7 +104,7 @@ class HomeViewModel constructor():ViewModel() {
     fun refreshtoken(refreshtoken:String)=viewModelScope.launch {
         iscompletedrefreshtoken.postValue(true)
         try {
-            val response=api.ferfeshtoken(RefreshToken("Bearer $refreshtoken"))
+            val response=api.ferfeshtoken(RefreshToken("$refreshtoken"))
             if (response.isSuccessful){
                 mlivedataRefreshtoken.postValue(Result.success(response.body()!!))
 
@@ -229,6 +250,71 @@ class HomeViewModel constructor():ViewModel() {
 
         }catch (e:Exception){
             iscompletedactiveDirection.postValue(false)
+
+        }
+
+    }
+
+
+    fun firebaseFCM(token:String,fcmToken:String)=viewModelScope.launch {
+
+        try {
+            val response=api.firebaseFCM(token = "Bearer $token", FirebaseFCM(fcm_token = fcmToken))
+            if (response.isSuccessful){
+                mlivedataFirebaseFCM.postValue(Result.success(response.body()!!))
+
+            }else{
+                mlivedataFirebaseFCM.postValue(Result.failure(Exception(response.errorBody()!!.string())))
+
+
+            }
+
+
+        }catch (e:Exception){
+
+
+        }
+
+    }
+
+
+    fun newSeat(token:String,newSeat: NewSeat)=viewModelScope.launch {
+
+        try {
+            val response=api.newSeat(token = "Bearer $token", newSeat)
+            if (response.isSuccessful){
+                mlivedatanewseat.postValue(Result.success(response.body()!!))
+
+            }else{
+                mlivedatanewseat.postValue(Result.failure(Exception(response.errorBody()!!.string())))
+
+
+            }
+
+
+        }catch (e:Exception){
+
+
+        }
+
+    }
+
+    fun orderseatConfirm(token:String,id:Int,orderSeat: OrderSeat)=viewModelScope.launch {
+
+        try {
+            val response=api.confirmseatorder(token = "Bearer $token", id = id, orderSeat)
+            if (response.isSuccessful){
+                mlivedataseatconfirm.postValue(Result.success(response.body()!!))
+
+            }else{
+                mlivedataseatconfirm.postValue(Result.failure(Exception(response.errorBody()!!.string())))
+
+
+            }
+
+
+        }catch (e:Exception){
+
 
         }
 

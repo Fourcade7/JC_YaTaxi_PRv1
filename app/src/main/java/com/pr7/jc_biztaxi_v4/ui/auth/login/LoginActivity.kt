@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.gson.GsonBuilder
 import com.pr7.jc_biztaxi_v4.data.model.login.LoginUserResponse
 import com.pr7.jc_biztaxi_v4.data.pref.OTPCODE
@@ -72,6 +73,8 @@ class LoginActivity : ComponentActivity() {
         setContent {
             statusbarcolorchange(window = window, color = StatusBarColor)
             loginScreen()
+            val systemUiController = rememberSystemUiController()
+           // systemUiController.isStatusBarVisible = false
 
         }
     }
@@ -201,7 +204,7 @@ fun loginScreen() {
                 Text(text = stringResource(id = R.string.phone))
             },
             placeholder = {
-                Text(text = "+998")
+                Text(text = "")
             },
             maxLines = 1,
             singleLine = true,

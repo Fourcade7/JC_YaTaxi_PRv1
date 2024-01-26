@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+     id ("com.google.gms.google-services")
+
 }
 
 android {
@@ -11,8 +13,8 @@ android {
         applicationId = "com.pr7.jc_biztaxi_v4"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 30
+        versionName = "30.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -143,6 +145,10 @@ dependencies {
     debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:4.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
+    //Firebase
+    implementation ("com.google.firebase:firebase-messaging-ktx:23.1.0")
+
 
 
 
